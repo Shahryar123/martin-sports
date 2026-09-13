@@ -1,8 +1,9 @@
-# Martin Sports — Architecture (Phase 1: Foundation)
+# Martin Sports — Architecture (Phase 1–2: Foundation + Admin CRUD)
 
 This document captures the architectural decisions made while scaffolding
-the project. It is a living document — update it as decisions change in
-later phases.
+the project (Phase 1) and building out full admin CRUD for products,
+categories, ambassadors and content (Phase 2). It is a living document —
+update it as decisions change in later phases.
 
 ## 1. Stack & application architecture
 
@@ -37,23 +38,34 @@ src/
     admin/
       login/page.tsx          public — NOT wrapped by the dashboard shell
       (dashboard)/             route group: everything that requires a session
-        layout.tsx              sidebar shell, calls getSession()
-        page.tsx products/ ambassadors/ inquiries/
+        layout.tsx              sidebar + mobile-nav shell, calls getSession()
+        page.tsx                 dashboard stats
+        products/                list/new/[id]/edit
+        categories/              list (dialog-based create/edit)
+        ambassadors/             list/new/[id]/edit
+        inquiries/               read-only (seam — see §15)
+        content/                 About/Homepage/Testimonials/Contact tabs
   components/
     ui/            shadcn primitives (generated, don't hand-edit)
+    admin/         admin-only UI: nav, page-header, stat-card, status/publish
+                   badges, confirm-dialog, admin-pagination, and
+                   products/categories/ambassadors/content feature folders
     layout/        site-header, site-footer
     products/      product-image (placeholder/real image seam), order-on-whatsapp-button
     shared/        whatsapp-fab
   lib/
     constants/     site.ts (brand/contact config), categories.ts, nav.ts
-    data/          placeholder seed data (products/ambassadors/testimonials)
-    repositories/  data-access interfaces + in-memory implementations (§7)
-    validations/   zod schemas
-    auth/          session.ts, admin.ts (§9)
-    actions/       server actions (admin-auth.ts)
+    data/          placeholder seed data (products/ambassadors/testimonials/
+                   categories/content)
+    repositories/  data-access interfaces + in-memory implementations (§7, §7a)
+    validations/   zod schemas (incl. product/category/ambassador/content)
+    auth/          session.ts, admin.ts, guard.ts (§9, §7a)
+    actions/       server actions — admin-auth.ts plus admin-products.ts/
+                   admin-categories.ts/admin-ambassadors.ts/admin-content.ts
+                   (§7a), product-search.ts
     whatsapp.ts     wa.me link builder (§10)
     seo.ts          metadata builder (§11)
-    utils.ts        cn (shadcn)
+    utils.ts        cn (shadcn) + slugify
   store/           zustand cart store
   types/           domain types (Product, Ambassador, Testimonial, Order...)
   proxy.ts         Next 16 middleware-equivalent — guards /admin/**
@@ -93,12 +105,20 @@ for, rather than relying on humans remembering which products are real.
 
 ## 5. Categories
 
-The 15 categories from the brief are the source of truth in
-`lib/constants/categories.ts` (`CATEGORIES`), each with a slug, display
-name and a Lucide icon (used by the image-placeholder fallback). Product
-category values are typed as `CategorySlug`, a union derived from that
-array — adding a category means editing one file and the type system
-finds every place that needs updating.
+The 15 categories from the brief still live in `lib/constants/categories.ts`
+(`CATEGORIES`) as the icon/name lookup used by the shop's filter UI,
+homepage groups and the placeholder-image fallback (`getCategoryIcon`/
+`getCategoryName`, both tolerant of an unknown slug). `CategorySlug` is now
+a plain `string`, not a union derived from that array: `/admin/categories`
+manages a separate, mutable `Category` entity (`lib/repositories/
+category-repository.ts`, seeded 1:1 from `CATEGORIES`) with description,
+image, sort order and published state, and admins can add categories
+beyond the original 15. A category created this way is fully manageable in
+the admin (and selectable on the product form's category dropdown, which
+reads from `categoryRepository`), but won't get a bespoke Lucide icon or
+appear in the storefront's hardcoded `HOMEPAGE_CATEGORY_GROUPS` — wiring
+the public nav/homepage to the dynamic category list is a deliberate scope
+cut for this phase, not an oversight.
 
 ## 6. Product repository / service abstraction
 
@@ -116,16 +136,51 @@ Mirrors: `ambassador-repository.ts`, `testimonial-repository.ts`.
 
 ## 7. Admin architecture
 
-- Route group `admin/(dashboard)/` — sidebar (Dashboard / Products /
-  Ambassadors / Inquiries) + topbar (signed-in-as email, sign out).
+- Route group `admin/(dashboard)/` — responsive sidebar (Dashboard /
+  Products / Categories / Ambassadors / Inquiries / Content), a Sheet-based
+  mobile nav (`admin-mobile-nav.tsx`) below `md`, + topbar (signed-in-as
+  email, sign out).
 - `admin/login/` — outside the dashboard group, no sidebar, own centered
   card layout.
-- This phase ships the shell and a real, working login/logout cycle plus
-  a dashboard stats page (reads live counts from the repositories).
-  Product/ambassador/inquiry CRUD screens are explicitly deferred to the
-  next phase (stub pages say so) — building the data layer and auth first
-  means those screens will be straightforward CRUD forms over an
-  already-solid contract.
+- **Phase 2 (this phase) ships full CRUD**, not just the shell:
+  - `/admin/products` — search/filter/paginated table, create/edit form
+    (`product-form.tsx`, React Hook Form + Zod, `useFieldArray` for
+    features/specs/sizes/images), publish/featured/new/best-seller toggles,
+    delete with confirmation.
+  - `/admin/categories` — dialog-based create/edit (image, description,
+    sort order, publish), delete.
+  - `/admin/ambassadors` — full-page create/edit form (achievements,
+    social links, publish), delete.
+  - `/admin/content` — tabs for About (+ founder profile), Homepage,
+    Testimonials (full CRUD), Contact — see §14.
+  - Dashboard stats (total/published/draft/featured products, categories,
+    low-stock, recent products, inquiry counts) read live from the
+    repositories' `getStats()`/`adminList()` methods.
+- **Data layer split**: every repository now has a public read path
+  (published-only, used by the storefront) and an `admin*` read path plus
+  `create`/`update`/`delete` mutation methods (seen only by
+  `lib/actions/admin-*.ts` server actions). UI components never call a
+  repository directly — see §7a.
+- **Auth on mutations**: `proxy.ts` and the dashboard layout gate *pages*,
+  but a Server Action is its own callable endpoint and bypasses both, so
+  every `lib/actions/admin-*.ts` function calls
+  `requireAdminSession()` (`lib/auth/guard.ts`) first, before touching a
+  repository. This is what "protect admin APIs/CRUD operations" means here
+  — there's no separate REST/route-handler layer to guard.
+
+### 7a. Service layer (server actions)
+
+`lib/actions/admin-products.ts` / `admin-categories.ts` /
+`admin-ambassadors.ts` / `admin-content.ts` are the only code paths allowed
+to mutate catalog/content data. Each exported action: checks the session,
+re-validates the input with the matching Zod schema in `lib/validations/*`
+(never trusts client-side validation alone), calls the repository, then
+`revalidatePath`s the affected admin + public routes. Forms call these
+directly as async functions (not via `<form action>` + FormData) because
+several (product, ambassador) have nested arrays that don't round-trip
+through FormData cleanly — React Hook Form manages client state,
+`safeParse` runs again client-side for immediate feedback, and the server
+action re-validates regardless.
 
 ## 8. Authentication approach
 
@@ -195,9 +250,13 @@ an `OrderInquiry` for the admin "Inquiries" screen.
   external stock photos were used, by design — an obviously-a-placeholder
   tile is more honest than a generic stock photo that looks like real
   inventory.
-- `next.config.ts` intentionally has no `images.remotePatterns` yet — add
-  the real image host(s) (S3/Cloudinary/CDN/etc.) there once decided;
-  local `/public` images never need it.
+- `next.config.ts` now allows any `https` `remotePatterns` host. There's
+  still no fixed image host or upload/storage service, and the admin
+  product/category/ambassador forms take a plain image path-or-URL text
+  input (no file upload) — so the optimizer needs a permissive pattern
+  rather than one fixed host. Only authenticated admins can set these URLs.
+  Narrow this once a real CDN/host is chosen; local `/public` images never
+  needed it.
 - Every placeholder record (products, ambassadors, testimonials, the
   ambassador bios) is flagged `isPlaceholder: true` and commented with
   what must not be treated as fact — no invented player names, awards or
@@ -244,17 +303,69 @@ only). To keep that decision cheap to reverse:
 - Server Actions are already the mutation pattern in use (`admin-auth.ts`),
   so a payment-intent-creation action would follow the same shape.
 
-## 14. Architectural risks & things to revisit
+## 14. Content architecture
+
+`lib/repositories/content-repository.ts` holds three singleton records —
+`AboutContent`, `HomepageContent`, `ContactConfig` (`src/types/content.ts`)
+— seeded from the copy currently hardcoded in the About/Homepage/Contact
+pages and `lib/constants/site.ts`. `/admin/content` (tabbed: About /
+Homepage / Testimonials / Contact) is the admin UI for all of it, per the
+brief's "prepare a clean architecture... don't overbuild a full CMS":
+no rich text, versioning or media library, just typed forms over typed
+records.
+
+- **About** is fully wired end-to-end: the About page already read
+  `ambassadorRepository.getOwnerProfile()`, so the admin form's owner-
+  profile save (`updateOwnerProfileAction`) and the new `about.intro` save
+  (`updateAboutAction`) both take effect on the live public page
+  immediately (via `revalidatePath("/about")`).
+- **Homepage and Contact are save-only for now** — the admin form
+  validates and persists to `contentRepository`, but `HeroSection` and the
+  contact page still read `SITE_CONFIG`/hardcoded JSX directly rather than
+  these records. `SITE_CONFIG` is a build-time constant imported by many
+  site-wide components (header, footer, WhatsApp links), so switching it
+  to an async, admin-editable source is a larger, separate refactor — not
+  done here to avoid touching unrelated public-site rendering paths for a
+  dashboard task. The seam (repository + validated forms) is in place for
+  that follow-up.
+- **Testimonials** are a real list, not a singleton, and get full CRUD
+  (`admin-content.ts`'s `create/update/deleteTestimonialAction`) exactly
+  like products/ambassadors/categories; `testimonialRepository.list()`
+  (used by the homepage) already filters to `published`, so unpublishing
+  one immediately hides it from the public site.
+
+## 15. Order inquiries (seam only)
+
+No checkout/order-inquiry flow persists an `OrderInquiry` yet — the cart
+(`CartView`) still goes straight to a WhatsApp deep link with no server
+round-trip or stored record, per the brief's own "if order inquiries are
+persisted" phrasing. `lib/repositories/order-inquiry-repository.ts` exists
+as the storage seam: `/admin/inquiries` and the dashboard's inquiry stats
+already read from it (showing an honest empty state today) so that wiring
+an inquiry-submission form into checkout later is additive — call
+`orderInquiryRepository.create()` — not a rewrite of the admin UI.
+
+## 16. Architectural risks & things to revisit
 
 - **Single-admin auth via env vars** doesn't scale past a handful of
   trusted admins and has no audit trail or password-reset flow. Fine for
   v1; flagged in §8 as the first thing to replace if more admins join.
-- **In-memory repository has no persistence** — any change made through a
-  future admin UI (once it does real writes, not just reads) will be lost
-  on server restart until a real database is wired in (§12). Phase 2
-  should not build "working" admin CRUD against the in-memory repository
-  without also deciding the DB migration timing, or it'll create a false
-  sense of durability.
+- **In-memory repositories have no persistence.** This phase built real
+  admin CRUD (products, categories, ambassadors, testimonials, content)
+  against them anyway, per the brief — every write (create/update/delete/
+  publish toggle) works and is visible immediately, but all of it resets
+  to the seed data on server restart. This is a known, accepted limit of
+  this phase, not a bug: §12 is the migration path (swap each
+  `export const xRepository = new InMemoryXRepository(...)` line for a
+  DB-backed class implementing the same interface) once real persistence
+  is needed — no route/action/component code changes required.
+- **Remote image URLs are unvalidated beyond "looks like a URL."** The
+  admin image fields accept any path/https URL with no upload, size, or
+  content-type check (§11); combined with the now-permissive
+  `images.remotePatterns: [{hostname: "**"}]`, an admin (only) could point
+  the image optimizer at an arbitrary external URL. Acceptable for a
+  single-trusted-admin dashboard; revisit if more admins with less trust
+  are added, or once a real image host/upload flow exists.
 - **`AUTH_SECRET`/`ADMIN_PASSWORD_HASH` must be set per environment.**
   `lib/auth/session.ts` and `admin.ts` throw clear errors if missing
   rather than silently allowing access — but that means admin login is
