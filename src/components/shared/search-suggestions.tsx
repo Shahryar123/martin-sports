@@ -16,33 +16,42 @@ type SearchSuggestionsProps = {
   onNavigate?: () => void;
 };
 
+const MIN_QUERY_LENGTH = 2;
+
 /** Live autocomplete dropdown shared by the header search and the shop
  * page's search field — debounces the query, then asks the repository
  * (via a server action) for name/SKU/brand/category matches. */
 export function SearchSuggestions({ query, onNavigate }: SearchSuggestionsProps) {
   const debouncedQuery = useDebouncedValue(query, 250);
-  const [results, setResults] = useState<ProductSuggestion[]>([]);
+  // Track which query a result set belongs to, rather than resetting
+  // `results` in an effect when the query changes — that would mean
+  // calling setState synchronously in the effect body, which can cause
+  // needless extra renders. Instead a stale result set (for a shorter or
+  // different query) is simply never rendered — see `showResults` below.
+  const [results, setResults] = useState<{ query: string; items: ProductSuggestion[] }>({
+    query: "",
+    items: [],
+  });
   const [isPending, startTransition] = useTransition();
-  const [hasSearched, setHasSearched] = useState(false);
+
+  const isSearchable = debouncedQuery.trim().length >= MIN_QUERY_LENGTH;
 
   useEffect(() => {
-    if (debouncedQuery.trim().length < 2) {
-      setResults([]);
-      setHasSearched(false);
-      return;
-    }
-    setHasSearched(true);
+    if (!isSearchable) return;
     startTransition(async () => {
       const suggestions = await getSearchSuggestions(debouncedQuery);
-      setResults(suggestions);
+      setResults({ query: debouncedQuery, items: suggestions });
     });
-  }, [debouncedQuery]);
+  }, [debouncedQuery, isSearchable]);
 
-  if (debouncedQuery.trim().length < 2) return null;
+  if (!isSearchable) return null;
+
+  const showResults = results.query === debouncedQuery;
+  const items = showResults ? results.items : [];
 
   return (
     <div className="mt-2 max-h-80 overflow-y-auto rounded-lg border border-border bg-popover">
-      {isPending ? (
+      {isPending || !showResults ? (
         <div className="space-y-3 p-3">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="flex items-center gap-3">
@@ -54,7 +63,7 @@ export function SearchSuggestions({ query, onNavigate }: SearchSuggestionsProps)
             </div>
           ))}
         </div>
-      ) : hasSearched && results.length === 0 ? (
+      ) : items.length === 0 ? (
         <div className="flex flex-col items-center gap-2 px-4 py-8 text-center">
           <SearchX className="size-5 text-muted-foreground" strokeWidth={1.5} />
           <p className="text-sm text-muted-foreground">
@@ -63,7 +72,7 @@ export function SearchSuggestions({ query, onNavigate }: SearchSuggestionsProps)
         </div>
       ) : (
         <ul className="divide-y divide-border">
-          {results.map((product) => (
+          {items.map((product) => (
             <li key={product.id}>
               <Link
                 href={`/shop/${product.slug}`}

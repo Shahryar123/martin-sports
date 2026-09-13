@@ -5,10 +5,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { SearchSuggestions } from "@/components/shared/search-suggestions";
 import { CATEGORIES } from "@/lib/constants/categories";
+import type { CategorySlug } from "@/lib/constants/categories";
 import { BRANDS } from "@/lib/constants/brands";
 import { formatPKR } from "@/lib/currency";
 import {
@@ -78,7 +78,7 @@ export function ShopFilters({ priceBounds, className, onNavigate }: ShopFiltersP
    * checkboxes are used, that singular param (and its `label` override,
    * which no longer describes an arbitrary combination) must be cleared or
    * an unchecked category would keep reappearing from it. */
-  function toggleCategory(slug: string) {
+  function toggleCategory(slug: CategorySlug) {
     const set = new Set(selectedCategories);
     if (set.has(slug)) set.delete(slug);
     else set.add(slug);
@@ -102,8 +102,13 @@ export function ShopFilters({ priceBounds, className, onNavigate }: ShopFiltersP
 
   function commitPrice(value: [number, number]) {
     const next = new URLSearchParams(searchParams.toString());
-    value[0] <= priceBounds.min ? next.delete(SHOP_PARAM.minPrice) : next.set(SHOP_PARAM.minPrice, String(value[0]));
-    value[1] >= priceBounds.max ? next.delete(SHOP_PARAM.maxPrice) : next.set(SHOP_PARAM.maxPrice, String(value[1]));
+
+    if (value[0] <= priceBounds.min) next.delete(SHOP_PARAM.minPrice);
+    else next.set(SHOP_PARAM.minPrice, String(value[0]));
+
+    if (value[1] >= priceBounds.max) next.delete(SHOP_PARAM.maxPrice);
+    else next.set(SHOP_PARAM.maxPrice, String(value[1]));
+
     navigate(next);
   }
 

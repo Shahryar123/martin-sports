@@ -5,7 +5,6 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, ZoomIn, X } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ProductImage } from "@/components/products/product-image";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { CategorySlug } from "@/lib/constants/categories";
 
