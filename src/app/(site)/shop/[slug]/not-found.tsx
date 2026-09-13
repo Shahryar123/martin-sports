@@ -13,7 +13,7 @@ export default function ProductNotFound() {
         description="This product may have been removed or the link is incorrect."
         action={
           <Button asChild>
-            <Link href="/products">Browse All Products</Link>
+            <Link href="/shop">Browse All Products</Link>
           </Button>
         }
       />

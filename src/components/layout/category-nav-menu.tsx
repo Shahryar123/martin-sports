@@ -23,7 +23,7 @@ export function CategoryNavMenu() {
               {CATEGORIES.map(({ slug, name, icon: Icon }) => (
                 <li key={slug}>
                   <NavigationMenuLink asChild>
-                    <Link href={`/products?category=${slug}`}>
+                    <Link href={`/shop?category=${slug}`}>
                       <Icon className="size-4 text-brand" strokeWidth={1.5} />
                       {name}
                     </Link>

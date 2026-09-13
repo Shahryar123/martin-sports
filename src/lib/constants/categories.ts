@@ -74,7 +74,7 @@ export const HOMEPAGE_CATEGORY_GROUPS: ReadonlyArray<{
 
 export function homepageCategoryHref(group: (typeof HOMEPAGE_CATEGORY_GROUPS)[number]): string {
   if (group.slugs.length === 1) {
-    return `/products?category=${group.slugs[0]}`;
+    return `/shop?category=${group.slugs[0]}`;
   }
-  return `/products?categories=${group.slugs.join(",")}&label=${encodeURIComponent(group.label)}`;
+  return `/shop?categories=${group.slugs.join(",")}&label=${encodeURIComponent(group.label)}`;
 }

@@ -16,7 +16,7 @@ export function FeaturedProductsSection({ products }: { products: Product[] }) {
           description="Placeholder catalog — real product photography and details coming soon."
           action={
             <Link
-              href="/products"
+              href="/shop"
               className="hidden items-center gap-1 text-sm font-medium text-brand hover:underline sm:inline-flex"
             >
               View all <ArrowRight className="size-4" />

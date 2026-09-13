@@ -12,7 +12,7 @@ import { useScrolled } from "@/hooks/use-scrolled";
 import { cn } from "@/lib/utils";
 
 // "Shop" is where the Categories dropdown is inserted in the desktop nav.
-const CATEGORIES_ANCHOR = "/products";
+const CATEGORIES_ANCHOR = "/shop";
 
 export function SiteHeader() {
   const scrolled = useScrolled();

@@ -91,7 +91,7 @@ export function MobileNav() {
                     {CATEGORIES.map((category) => (
                       <li key={category.slug}>
                         <Link
-                          href={`/products?category=${category.slug}`}
+                          href={`/shop?category=${category.slug}`}
                           onClick={() => setOpen(false)}
                           className="flex min-h-11 items-center rounded-md px-3 text-sm text-foreground-secondary transition-colors hover:bg-surface-2 hover:text-foreground active:bg-surface-2"
                         >

@@ -11,7 +11,7 @@ export type NavLink = {
  */
 export const PRIMARY_NAV: NavLink[] = [
   { label: "Home", href: "/" },
-  { label: "Shop", href: "/products" },
+  { label: "Shop", href: "/shop" },
   { label: "Brand Ambassadors", href: "/ambassadors" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
@@ -21,10 +21,10 @@ export const FOOTER_NAV: { title: string; links: NavLink[] }[] = [
   {
     title: "Shop",
     links: [
-      { label: "All Products", href: "/products" },
-      { label: "Cricket Bats", href: "/products?category=bats" },
-      { label: "Protective Gear", href: "/products?category=pads" },
-      { label: "Kit Bags", href: "/products?category=kit-bags" },
+      { label: "All Products", href: "/shop" },
+      { label: "Cricket Bats", href: "/shop?category=bats" },
+      { label: "Protective Gear", href: "/shop?category=pads" },
+      { label: "Kit Bags", href: "/shop?category=kit-bags" },
     ],
   },
   {

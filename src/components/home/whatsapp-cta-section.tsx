@@ -20,7 +20,7 @@ export function WhatsAppCtaSection() {
               <WhatsAppButton size="lg" />
             </MotionPress>
             <Link
-              href="/products"
+              href="/shop"
               className="text-sm font-medium text-foreground-secondary hover:text-foreground hover:underline"
             >
               or browse all products

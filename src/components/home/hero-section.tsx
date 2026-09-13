@@ -27,7 +27,7 @@ export function HeroSection() {
           <div className="mt-10 flex flex-wrap gap-4">
             <MotionPress>
               <Button size="lg" asChild>
-                <Link href="/products">
+                <Link href="/shop">
                   Shop the Collection
                   <ArrowRight className="size-4" />
                 </Link>

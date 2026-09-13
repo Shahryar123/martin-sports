@@ -162,3 +162,15 @@
     scroll-behavior: auto !important;
   }
 }
+
+@layer utilities {
+  /* Hides the scrollbar on swipeable/scroll-snap rows (product gallery)
+     while keeping the element natively scrollable/swipeable. */
+  .scrollbar-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+}

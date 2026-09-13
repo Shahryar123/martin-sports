@@ -1,8 +1,10 @@
 import { PRODUCTS } from "@/lib/data/products";
+import { getCategoryName } from "@/lib/constants/categories";
 import type {
   Product,
   ProductListParams,
   ProductListResult,
+  ProductSuggestion,
 } from "@/types";
 
 /**
@@ -12,7 +14,8 @@ import type {
  * possible to swap in a real database later without touching call sites.
  *
  * All methods are async so a future DB/ORM-backed implementation is a
- * drop-in replacement.
+ * drop-in replacement. Every method here only ever returns `published`
+ * products — there is no public-facing way to read a draft/unpublished one.
  */
 export interface ProductRepository {
   list(params?: ProductListParams): Promise<ProductListResult>;
@@ -21,17 +24,22 @@ export interface ProductRepository {
   getFeatured(limit?: number): Promise<Product[]>;
   getRelated(product: Product, limit?: number): Promise<Product[]>;
   getAllSlugs(): Promise<string[]>;
+  /** Lightweight matches for a search-suggestions dropdown. */
+  suggest(query: string, limit?: number): Promise<ProductSuggestion[]>;
+  /** Min/max effective price across the catalog — feeds the shop price
+   * filter's slider domain so it's never hardcoded/stale. */
+  getPriceBounds(): Promise<{ min: number; max: number }>;
 }
 
-const DEFAULT_PAGE_SIZE = 24;
+const DEFAULT_PAGE_SIZE = 12;
 
 function sortProducts(products: Product[], sort: ProductListParams["sort"]) {
   const sorted = [...products];
   switch (sort) {
     case "price-asc":
-      return sorted.sort((a, b) => a.price - b.price);
+      return sorted.sort((a, b) => effectivePrice(a) - effectivePrice(b));
     case "price-desc":
-      return sorted.sort((a, b) => b.price - a.price);
+      return sorted.sort((a, b) => effectivePrice(b) - effectivePrice(a));
     case "name-asc":
       return sorted.sort((a, b) => a.name.localeCompare(b.name));
     case "newest":
@@ -44,6 +52,10 @@ function sortProducts(products: Product[], sort: ProductListParams["sort"]) {
   }
 }
 
+function effectivePrice(product: Product): number {
+  return product.salePrice ?? product.price;
+}
+
 /**
  * In-memory implementation backed by the placeholder seed data in
  * `lib/data/products.ts`. See ARCHITECTURE.md ("Data layer") for the plan to
@@ -53,16 +65,33 @@ class InMemoryProductRepository implements ProductRepository {
   private readonly products: Product[];
 
   constructor(products: Product[]) {
-    this.products = products;
+    this.products = products.filter((p) => p.published);
+  }
+
+  private matchesSearch(product: Product, query: string): boolean {
+    const q = query.toLowerCase();
+    return (
+      product.name.toLowerCase().includes(q) ||
+      product.sku.toLowerCase().includes(q) ||
+      product.brand.toLowerCase().includes(q) ||
+      getCategoryName(product.category).toLowerCase().includes(q) ||
+      product.shortDescription.toLowerCase().includes(q) ||
+      product.tags.some((t) => t.toLowerCase().includes(q))
+    );
   }
 
   async list(params: ProductListParams = {}): Promise<ProductListResult> {
     const {
       category,
       categories,
+      brand,
       minPrice,
       maxPrice,
+      stockStatuses,
       inStockOnly,
+      featuredOnly,
+      newOnly,
+      bestSellerOnly,
       search,
       tags,
       sort = "featured",
@@ -78,26 +107,35 @@ class InMemoryProductRepository implements ProductRepository {
     if (categories?.length) {
       filtered = filtered.filter((p) => categories.includes(p.category));
     }
+    if (brand) {
+      filtered = filtered.filter((p) => p.brand === brand);
+    }
     if (typeof minPrice === "number") {
-      filtered = filtered.filter((p) => p.price >= minPrice);
+      filtered = filtered.filter((p) => effectivePrice(p) >= minPrice);
     }
     if (typeof maxPrice === "number") {
-      filtered = filtered.filter((p) => p.price <= maxPrice);
+      filtered = filtered.filter((p) => effectivePrice(p) <= maxPrice);
     }
-    if (inStockOnly) {
-      filtered = filtered.filter((p) => p.inStock);
+    if (stockStatuses?.length) {
+      filtered = filtered.filter((p) => stockStatuses.includes(p.stockStatus));
+    } else if (inStockOnly) {
+      filtered = filtered.filter((p) => p.stockStatus !== "out-of-stock");
+    }
+    if (featuredOnly) {
+      filtered = filtered.filter((p) => p.featured);
+    }
+    if (newOnly) {
+      filtered = filtered.filter((p) => p.isNew);
+    }
+    if (bestSellerOnly) {
+      filtered = filtered.filter((p) => p.bestSeller);
     }
     if (tags?.length) {
       filtered = filtered.filter((p) => tags.some((t) => p.tags.includes(t)));
     }
     if (search?.trim()) {
-      const q = search.trim().toLowerCase();
-      filtered = filtered.filter(
-        (p) =>
-          p.name.toLowerCase().includes(q) ||
-          p.shortDescription.toLowerCase().includes(q) ||
-          p.tags.some((t) => t.toLowerCase().includes(q)),
-      );
+      const q = search.trim();
+      filtered = filtered.filter((p) => this.matchesSearch(p, q));
     }
 
     const sorted = sortProducts(filtered, sort);
@@ -130,6 +168,31 @@ class InMemoryProductRepository implements ProductRepository {
 
   async getAllSlugs(): Promise<string[]> {
     return this.products.map((p) => p.slug);
+  }
+
+  async getPriceBounds(): Promise<{ min: number; max: number }> {
+    const prices = this.products.map(effectivePrice);
+    return {
+      min: Math.min(...prices, 0),
+      max: Math.max(...prices, 0),
+    };
+  }
+
+  async suggest(query: string, limit = 6): Promise<ProductSuggestion[]> {
+    const q = query.trim();
+    if (!q) return [];
+
+    return this.products
+      .filter((p) => this.matchesSearch(p, q))
+      .slice(0, limit)
+      .map((p) => ({
+        id: p.id,
+        slug: p.slug,
+        name: p.name,
+        category: p.category,
+        price: effectivePrice(p),
+        image: p.images[0] ?? "",
+      }));
   }
 }
 

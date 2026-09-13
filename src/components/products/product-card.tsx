@@ -6,8 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ProductHeading, Metadata, Caption } from "@/components/ui/typography";
 import { getCategoryName } from "@/lib/constants/categories";
-import { SITE_CONFIG } from "@/lib/constants/site";
 import type { Product } from "@/types";
+
+const STOCK_BADGE: Record<Product["stockStatus"], { label: string; variant: "success" | "warning" | "destructive" }> = {
+  "in-stock": { label: "In Stock", variant: "success" },
+  "low-stock": { label: "Low Stock", variant: "warning" },
+  "out-of-stock": { label: "Out of Stock", variant: "destructive" },
+};
 
 /**
  * The card's own link and the quick WhatsApp-order action are siblings
@@ -16,8 +21,10 @@ import type { Product } from "@/types";
  * not the whole tile.
  */
 export function ProductCard({ product }: { product: Product }) {
-  const href = `/products/${product.slug}`;
-  const hasDiscount = !!product.compareAtPrice && product.compareAtPrice > product.price;
+  const href = `/shop/${product.slug}`;
+  const hasSale = !!product.salePrice && product.salePrice < product.price;
+  const effectivePrice = product.salePrice ?? product.price;
+  const stock = STOCK_BADGE[product.stockStatus];
 
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-brand/40">
@@ -32,10 +39,8 @@ export function ProductCard({ product }: { product: Product }) {
           className="aspect-square w-full transition-transform duration-300 group-hover:scale-[1.03]"
         />
         <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-2">
-          <Badge variant={product.inStock ? "success" : "warning"}>
-            {product.inStock ? "In Stock" : "Out of Stock"}
-          </Badge>
-          {hasDiscount && <Badge>Sale</Badge>}
+          <Badge variant={stock.variant}>{stock.label}</Badge>
+          {hasSale && <Badge>Sale</Badge>}
         </div>
       </Link>
 
@@ -49,10 +54,10 @@ export function ProductCard({ product }: { product: Product }) {
             {product.name}
           </ProductHeading>
         </Link>
-        <Caption className="mt-0.5">by {SITE_CONFIG.name}</Caption>
+        <Caption className="mt-0.5">by {product.brand}</Caption>
         <PriceDisplay
-          price={product.price}
-          compareAtPrice={product.compareAtPrice}
+          price={effectivePrice}
+          compareAtPrice={hasSale ? product.price : undefined}
           size="sm"
           className="mt-2"
         />
@@ -68,7 +73,7 @@ export function ProductCard({ product }: { product: Product }) {
                 productId: product.id,
                 productSlug: product.slug,
                 productName: product.name,
-                unitPrice: product.price,
+                unitPrice: effectivePrice,
                 quantity: 1,
                 image: product.images[0] ?? "",
               },
