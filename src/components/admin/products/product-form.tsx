@@ -235,7 +235,7 @@ export function ProductForm({ mode, product, categories }: ProductFormProps) {
             <Label htmlFor="name">Name</Label>
             <Input
               id="name"
-              {...register("name", { required: true })}
+              {...register("name")}
               onChange={(e) => {
                 register("name").onChange(e);
                 if (!product) setValue("slug", slugify(e.target.value));
