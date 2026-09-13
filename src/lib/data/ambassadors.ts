@@ -5,6 +5,8 @@ import type { Ambassador, OwnerProfile } from "@/types";
  * stand-ins — no real athlete identities, statistics or affiliations are
  * implied. Replace with real, approved ambassador profiles before launch.
  */
+const SEED_TIMESTAMP = "2025-01-01T00:00:00.000Z";
+
 export const AMBASSADORS: Ambassador[] = [
   {
     id: "amb-01",
@@ -13,7 +15,12 @@ export const AMBASSADORS: Ambassador[] = [
     role: "Brand Ambassador",
     photo: "",
     bio: "Profile details to be provided by Martin Sports.",
+    achievements: [],
+    socialLinks: [],
+    published: true,
     isPlaceholder: true,
+    createdAt: SEED_TIMESTAMP,
+    updatedAt: SEED_TIMESTAMP,
   },
   {
     id: "amb-02",
@@ -22,7 +29,12 @@ export const AMBASSADORS: Ambassador[] = [
     role: "Brand Ambassador",
     photo: "",
     bio: "Profile details to be provided by Martin Sports.",
+    achievements: [],
+    socialLinks: [],
+    published: true,
     isPlaceholder: true,
+    createdAt: SEED_TIMESTAMP,
+    updatedAt: SEED_TIMESTAMP,
   },
   {
     id: "amb-03",
@@ -31,7 +43,12 @@ export const AMBASSADORS: Ambassador[] = [
     role: "Brand Ambassador",
     photo: "",
     bio: "Profile details to be provided by Martin Sports.",
+    achievements: [],
+    socialLinks: [],
+    published: true,
     isPlaceholder: true,
+    createdAt: SEED_TIMESTAMP,
+    updatedAt: SEED_TIMESTAMP,
   },
 ];
 

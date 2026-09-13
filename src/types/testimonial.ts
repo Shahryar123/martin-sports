@@ -5,5 +5,6 @@ export type Testimonial = {
   rating: 1 | 2 | 3 | 4 | 5;
   quote: string;
   productSlug?: string;
+  published: boolean; // unpublished testimonials never appear in public pages
   isPlaceholder: boolean;
 };

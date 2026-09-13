@@ -10,6 +10,7 @@ export const TESTIMONIALS: Testimonial[] = [
     authorLocation: "Lahore",
     rating: 5,
     quote: "Good quality gear and the WhatsApp ordering made it easy to sort out sizes before buying.",
+    published: true,
     isPlaceholder: true,
   },
   {
@@ -18,6 +19,7 @@ export const TESTIMONIALS: Testimonial[] = [
     authorLocation: "Karachi",
     rating: 4,
     quote: "Delivery took a few days but the pads held up well through a full season of club cricket.",
+    published: true,
     isPlaceholder: true,
   },
   {
@@ -26,6 +28,7 @@ export const TESTIMONIALS: Testimonial[] = [
     authorLocation: "Islamabad",
     rating: 5,
     quote: "Ordered a bat on Cash on Delivery, no issues at all. Will order again for the academy.",
+    published: true,
     isPlaceholder: true,
   },
   {
@@ -34,6 +37,7 @@ export const TESTIMONIALS: Testimonial[] = [
     authorLocation: "Faisalabad",
     rating: 5,
     quote: "Helmet fit was exactly as described and the grille feels solid.",
+    published: true,
     isPlaceholder: true,
   },
 ];

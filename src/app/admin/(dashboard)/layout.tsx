@@ -1,16 +1,10 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
 import { logoutAdminAction } from "@/lib/actions/admin-auth";
 import { Button } from "@/components/ui/button";
-
-const ADMIN_NAV = [
-  { label: "Dashboard", href: "/admin" },
-  { label: "Products", href: "/admin/products" },
-  { label: "Ambassadors", href: "/admin/ambassadors" },
-  { label: "Inquiries", href: "/admin/inquiries" },
-];
+import { AdminNavLinks } from "@/components/admin/admin-nav";
+import { AdminMobileNav } from "@/components/admin/admin-mobile-nav";
 
 export default async function AdminLayout({
   children,
@@ -33,32 +27,25 @@ export default async function AdminLayout({
           </p>
           <p className="text-xs text-muted-foreground">Admin Dashboard</p>
         </div>
-        <nav className="space-y-1">
-          {ADMIN_NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <AdminNavLinks />
       </aside>
 
       <div className="flex flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-border bg-card px-6 py-4">
-          <p className="text-sm text-muted-foreground">
-            Signed in as{" "}
-            <span className="text-foreground">{session.email}</span>
-          </p>
+        <header className="flex items-center justify-between gap-3 border-b border-border bg-card px-4 py-4 sm:px-6">
+          <div className="flex items-center gap-3">
+            <AdminMobileNav />
+            <p className="text-sm text-muted-foreground">
+              Signed in as{" "}
+              <span className="text-foreground">{session.email}</span>
+            </p>
+          </div>
           <form action={logoutAdminAction}>
             <Button type="submit" variant="outline" size="sm">
               Sign out
             </Button>
           </form>
         </header>
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

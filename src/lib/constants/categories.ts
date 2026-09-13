@@ -34,7 +34,11 @@ export const CATEGORIES = [
   icon: LucideIcon;
 }>;
 
-export type CategorySlug = (typeof CATEGORIES)[number]["slug"];
+// A plain string, not a literal union: category management (`/admin/categories`)
+// lets admins create categories beyond this seed list, so the type can't be a
+// closed union derived from `CATEGORIES` anymore. `CATEGORIES` remains the
+// seed data + icon/name lookup for the original 15 taxonomy entries.
+export type CategorySlug = string;
 
 export function getCategoryName(slug: CategorySlug): string {
   return CATEGORIES.find((c) => c.slug === slug)?.name ?? slug;

@@ -18,6 +18,13 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // The admin product/category/ambassador forms accept any https image
+    // URL (there's no fixed CDN/host yet, and no upload storage — see
+    // ARCHITECTURE.md "Image & data replacement strategy"), so the
+    // optimizer needs a permissive remote pattern rather than one fixed
+    // host. Only authenticated admins can set these URLs. Narrow this to
+    // real image host(s) once one is chosen.
+    remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
 };
 
