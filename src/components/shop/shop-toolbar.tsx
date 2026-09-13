@@ -70,10 +70,13 @@ export function ShopToolbar({
             Filters
           </Button>
           <SheetContent side="left" className="w-full overflow-y-auto sm:max-w-sm">
-            <SheetHeader>
+            {/* ShopFilters renders its own visible "Filters" heading; this
+                one is sr-only so Radix's Dialog a11y title requirement is
+                met without showing the word twice. */}
+            <SheetHeader className="sr-only">
               <SheetTitle>Filters</SheetTitle>
             </SheetHeader>
-            <div className="px-4 pb-6">
+            <div className="px-4 pb-6 pt-6">
               <ShopFilters priceBounds={priceBounds} onNavigate={() => setFiltersOpen(false)} />
             </div>
           </SheetContent>

@@ -16,6 +16,19 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+/**
+ * Without this, an unknown slug still renders `not-found.tsx` correctly but
+ * with an HTTP 200: `shop/loading.tsx` streams that status before the async
+ * `getBySlug`/`notFound()` call resolves, and a response's status can't
+ * change once streaming has started. `dynamicParams = false` rejects any
+ * slug outside `generateStaticParams` before rendering begins, so the 404
+ * is resolved up front instead. (If products ever come from a live DB where
+ * a slug can disappear *after* the build that generated static params for
+ * it, that specific case would need the same existence check moved into
+ * `proxy.ts`, which always runs before any Suspense boundary.)
+ */
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const slugs = await productRepository.getAllSlugs();
   return slugs.map((slug) => ({ slug }));
