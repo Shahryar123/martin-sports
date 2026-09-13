@@ -14,7 +14,12 @@ export const metadata: Metadata = buildMetadata({
 });
 
 type Props = {
-  searchParams: Promise<{ category?: string; search?: string }>;
+  searchParams: Promise<{
+    category?: string;
+    categories?: string; // comma-separated CategorySlug[], for grouped homepage links (e.g. "Gloves", "Protection")
+    label?: string; // override heading when `categories` spans a group that has no single category name
+    search?: string;
+  }>;
 };
 
 function isCategorySlug(value: string): value is CategorySlug {
@@ -23,21 +28,29 @@ function isCategorySlug(value: string): value is CategorySlug {
 
 /**
  * Minimal listing for this phase — proves the repository/filter contract end
- * to end, and gives the header's search box and category dropdown a real
- * destination. Sort controls, price filters and pagination UI are built out
- * in the next phase (the repository already supports all of it).
+ * to end, and gives the header's search box, category dropdown, and the
+ * homepage's category/CTA links a real destination. Sort controls, price
+ * filters and pagination UI are built out in the next phase (the repository
+ * already supports all of it).
  */
 export default async function ProductsPage({ searchParams }: Props) {
-  const { category, search } = await searchParams;
+  const { category, categories, label, search } = await searchParams;
+
   const categorySlug = category && isCategorySlug(category) ? category : undefined;
+  const categorySlugs = categories
+    ?.split(",")
+    .map((c) => c.trim())
+    .filter(isCategorySlug);
 
   const { items } = await productRepository.list({
     pageSize: 100,
     category: categorySlug,
+    categories: categorySlugs?.length ? categorySlugs : undefined,
     search,
   });
 
-  const heading = categorySlug ? getCategoryName(categorySlug) : "Shop All Products";
+  const heading =
+    label ?? (categorySlug ? getCategoryName(categorySlug) : "Shop All Products");
 
   return (
     <Container className="py-12 sm:py-16">

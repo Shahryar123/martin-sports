@@ -9,7 +9,7 @@ export const AMBASSADORS: Ambassador[] = [
   {
     id: "amb-01",
     slug: "ambassador-one",
-    name: "Ambassador Name",
+    name: "Ambassador One",
     role: "Brand Ambassador",
     photo: "",
     bio: "Profile details to be provided by Martin Sports.",
@@ -18,7 +18,16 @@ export const AMBASSADORS: Ambassador[] = [
   {
     id: "amb-02",
     slug: "ambassador-two",
-    name: "Ambassador Name",
+    name: "Ambassador Two",
+    role: "Brand Ambassador",
+    photo: "",
+    bio: "Profile details to be provided by Martin Sports.",
+    isPlaceholder: true,
+  },
+  {
+    id: "amb-03",
+    slug: "ambassador-three",
+    name: "Ambassador Three",
     role: "Brand Ambassador",
     photo: "",
     bio: "Profile details to be provided by Martin Sports.",

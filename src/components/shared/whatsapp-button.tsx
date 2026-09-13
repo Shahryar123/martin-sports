@@ -9,9 +9,10 @@ import { cn } from "@/lib/utils";
 import type { CartLineItem } from "@/types";
 
 type WhatsAppButtonProps = {
-  /** "fab" = fixed floating round button (site-wide contact). Any other
-   * variant renders an inline shadcn Button styled as a WhatsApp CTA. */
-  variant?: "fab" | "default" | "outline" | "secondary";
+  /** "fab" = fixed floating round button (site-wide contact). "icon" = a
+   * compact, non-fixed icon-only button (product cards). Any other variant
+   * renders an inline shadcn Button styled as a WhatsApp CTA. */
+  variant?: "fab" | "icon" | "default" | "outline" | "secondary";
   size?: "default" | "sm" | "lg";
   label?: string;
   /** Order context — when given, the message lists these item(s) instead
@@ -44,6 +45,27 @@ export function WhatsAppButton({
   className,
 }: WhatsAppButtonProps) {
   const href = buildHref(items);
+
+  if (variant === "icon") {
+    return (
+      <Button
+        asChild
+        variant="outline"
+        size="icon"
+        className={cn("size-11", className)}
+      >
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Order on WhatsApp"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <MessageCircle className="size-4" />
+        </a>
+      </Button>
+    );
+  }
 
   if (variant === "fab") {
     return (

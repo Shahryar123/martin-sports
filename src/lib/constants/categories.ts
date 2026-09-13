@@ -43,3 +43,38 @@ export function getCategoryName(slug: CategorySlug): string {
 export function getCategoryIcon(slug: CategorySlug): LucideIcon {
   return CATEGORIES.find((c) => c.slug === slug)?.icon ?? Wrench;
 }
+
+/**
+ * Curated top-level groups shown on the homepage — coarser than the full
+ *15-slug catalog taxonomy (e.g. "Gloves" spans both batting and
+ * wicket-keeping gloves, "Protection" spans the four guard categories).
+ * `slugs` feeds the products page's `categories` (plural) filter; `label`
+ * overrides the page heading since a group has no single category name.
+ */
+export const HOMEPAGE_CATEGORY_GROUPS: ReadonlyArray<{
+  label: string;
+  icon: LucideIcon;
+  slugs: CategorySlug[];
+}> = [
+  { label: "Cricket Bats", icon: Shield, slugs: ["bats"] },
+  { label: "Cricket Balls", icon: CircleDot, slugs: ["balls"] },
+  { label: "Gloves", icon: Hand, slugs: ["batting-gloves", "keeping-gloves"] },
+  { label: "Helmets", icon: HardHat, slugs: ["helmets"] },
+  { label: "Pads", icon: ShieldHalf, slugs: ["pads"] },
+  {
+    label: "Protection",
+    icon: ShieldHalf,
+    slugs: ["thigh-guards", "arm-guards", "chest-guards", "elbow-guards"],
+  },
+  { label: "Shoes", icon: Footprints, slugs: ["shoes"] },
+  { label: "Kit Bags", icon: Briefcase, slugs: ["kit-bags"] },
+  { label: "Accessories", icon: Wrench, slugs: ["accessories", "bat-grips"] },
+  { label: "Training Equipment", icon: Dumbbell, slugs: ["training-equipment"] },
+];
+
+export function homepageCategoryHref(group: (typeof HOMEPAGE_CATEGORY_GROUPS)[number]): string {
+  if (group.slugs.length === 1) {
+    return `/products?category=${group.slugs[0]}`;
+  }
+  return `/products?categories=${group.slugs.join(",")}&label=${encodeURIComponent(group.label)}`;
+}
