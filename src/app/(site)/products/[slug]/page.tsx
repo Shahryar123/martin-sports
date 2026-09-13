@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ProductImage } from "@/components/products/product-image";
-import { OrderOnWhatsAppButton } from "@/components/products/order-on-whatsapp-button";
+import { WhatsAppButton } from "@/components/shared/whatsapp-button";
+import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { Container } from "@/components/shared/container";
+import { PriceDisplay } from "@/components/shared/price-display";
+import { PageHeading, Body, Metadata as MetaText } from "@/components/ui/typography";
 import { productRepository } from "@/lib/repositories/product-repository";
 import { getCategoryName } from "@/lib/constants/categories";
 import { buildMetadata } from "@/lib/seo";
@@ -34,10 +38,14 @@ export default async function ProductDetailPage({ params }: Props) {
   if (!product) notFound();
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <p className="text-sm text-muted-foreground">
-        {getCategoryName(product.category)}
-      </p>
+    <Container className="py-12 sm:py-16">
+      <Breadcrumbs
+        items={[
+          { label: "Shop", href: "/products" },
+          { label: getCategoryName(product.category), href: `/products?category=${product.category}` },
+          { label: product.name },
+        ]}
+      />
 
       <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-2">
         <ProductImage
@@ -49,15 +57,17 @@ export default async function ProductDetailPage({ params }: Props) {
         />
 
         <div>
-          <h1 className="font-heading text-3xl font-semibold text-foreground">
+          <MetaText>{getCategoryName(product.category)}</MetaText>
+          <PageHeading as="h1" className="mt-1">
             {product.name}
-          </h1>
-          <p className="mt-3 text-2xl font-semibold text-primary">
-            Rs. {product.price.toLocaleString("en-PK")}
-          </p>
-          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            {product.description}
-          </p>
+          </PageHeading>
+          <PriceDisplay
+            price={product.price}
+            compareAtPrice={product.compareAtPrice}
+            size="lg"
+            className="mt-3"
+          />
+          <Body className="mt-4">{product.description}</Body>
 
           {product.specs.length > 0 && (
             <dl className="mt-6 space-y-2 border-t border-border pt-6">
@@ -71,13 +81,27 @@ export default async function ProductDetailPage({ params }: Props) {
           )}
 
           <div className="mt-8">
-            <OrderOnWhatsAppButton product={product} />
+            <WhatsAppButton
+              label="Order on WhatsApp"
+              size="lg"
+              className="w-full sm:w-auto"
+              items={[
+                {
+                  productId: product.id,
+                  productSlug: product.slug,
+                  productName: product.name,
+                  unitPrice: product.price,
+                  quantity: 1,
+                  image: product.images[0] ?? "",
+                },
+              ]}
+            />
             <p className="mt-3 text-xs text-muted-foreground">
               Cash on Delivery · Nationwide delivery across Pakistan
             </p>
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

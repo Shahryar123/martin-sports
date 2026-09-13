@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { WhatsAppFab } from "@/components/shared/whatsapp-fab";
+import { WhatsAppButton } from "@/components/shared/whatsapp-button";
 
 /**
  * Public storefront shell (header/footer/WhatsApp FAB). Kept out of the
@@ -14,7 +14,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <SiteHeader />
       <main className="flex-1">{children}</main>
       <SiteFooter />
-      <WhatsAppFab />
+      <WhatsAppButton variant="fab" />
     </>
   );
 }

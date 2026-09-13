@@ -1,13 +1,6 @@
 import { SITE_CONFIG } from "@/lib/constants/site";
+import { formatPKR } from "@/lib/currency";
 import type { CartLineItem, CustomerDetails } from "@/types";
-
-function formatPKR(amount: number): string {
-  return new Intl.NumberFormat("en-PK", {
-    style: "currency",
-    currency: "PKR",
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
 /**
  * Builds the wa.me deep link used for WhatsApp-based ordering. Works for

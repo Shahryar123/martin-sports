@@ -14,6 +14,13 @@
   --color-surface-1: var(--surface-1);
   --color-surface-2: var(--surface-2);
   --color-surface-3: var(--surface-3);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-brand: var(--brand-accent);
+  --color-brand-foreground: var(--brand-accent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -59,10 +66,16 @@
  * background (surface-0) through cards (surface-1) to popovers/modals
  * (surface-3) so stacked UI reads as layered rather than flat.
  *
- * The single accent color is a muted, premium gold — used sparingly for
- * primary actions, links, focus states and brand marks — kept deliberately
- * distinct from --destructive (a true red) so danger actions never look
- * like the brand CTA.
+ * --brand-accent is THE single accent color for the whole brand — change
+ * it here and every button, link, focus ring and highlight follows. It is
+ * deliberately separate from shadcn's own --primary/--accent plumbing (which
+ * --primary simply points at) so this file has one unambiguous place to
+ * repaint the brand, and from --destructive/--success/--warning so status
+ * colors never get confused with the brand color.
+ *
+ * Text has three tiers: --foreground (primary), --foreground-secondary
+ * (secondary — subheadings, supporting copy), --muted-foreground (muted —
+ * captions, metadata, disabled/tertiary text).
  */
 :root,
 .dark {
@@ -71,16 +84,20 @@
   --surface-2: oklch(0.25 0.006 260);
   --surface-3: oklch(0.225 0.006 260);
 
+  --brand-accent: oklch(0.8 0.135 82);
+  --brand-accent-foreground: oklch(0.18 0.02 82);
+
   --background: var(--surface-0);
   --foreground: oklch(0.96 0.002 260);
+  --foreground-secondary: oklch(0.8 0.006 260);
 
   --card: var(--surface-1);
   --card-foreground: var(--foreground);
   --popover: var(--surface-3);
   --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.8 0.135 82);
-  --primary-foreground: oklch(0.18 0.02 82);
+  --primary: var(--brand-accent);
+  --primary-foreground: var(--brand-accent-foreground);
 
   --secondary: var(--surface-2);
   --secondary-foreground: var(--foreground);
@@ -91,6 +108,12 @@
   --accent: var(--surface-2);
   --accent-foreground: var(--foreground);
 
+  --success: oklch(0.72 0.15 152);
+  --success-foreground: oklch(0.17 0.03 152);
+
+  --warning: oklch(0.8 0.15 80);
+  --warning-foreground: oklch(0.18 0.03 80);
+
   --destructive: oklch(0.62 0.21 25);
   --destructive-foreground: oklch(0.97 0.01 25);
 
@@ -98,7 +121,7 @@
   --input: oklch(1 0 0 / 14%);
   --ring: oklch(0.8 0.135 82 / 55%);
 
-  --chart-1: oklch(0.8 0.135 82);
+  --chart-1: var(--brand-accent);
   --chart-2: oklch(0.65 0.01 260);
   --chart-3: oklch(0.5 0.01 260);
   --chart-4: oklch(0.4 0.01 260);
@@ -126,5 +149,16 @@
   html {
     @apply font-sans;
     color-scheme: dark;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

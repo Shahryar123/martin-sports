@@ -4,18 +4,18 @@ import { Container } from "@/components/shared/container";
 import { PageHeading, Body } from "@/components/ui/typography";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Delivery & Cash on Delivery",
-  path: "/delivery",
+  title: "Privacy Policy",
+  path: "/privacy-policy",
+  noIndex: true,
 });
 
-export default function DeliveryPage() {
+export default function PrivacyPolicyPage() {
   return (
     <Container className="max-w-2xl py-16 sm:py-20">
-      <PageHeading>Delivery &amp; Cash on Delivery</PageHeading>
+      <PageHeading>Privacy Policy</PageHeading>
       <Body className="mt-4">
-        Martin Sports delivers nationwide across Pakistan with Cash on
-        Delivery — pay when your order arrives. Detailed delivery timelines
-        and coverage information will be published here.
+        Martin Sports&apos; full privacy policy will be published here before
+        launch.
       </Body>
     </Container>
   );

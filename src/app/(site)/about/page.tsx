@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { ambassadorRepository } from "@/lib/repositories/ambassador-repository";
 import { buildMetadata } from "@/lib/seo";
+import { Container } from "@/components/shared/container";
+import { PageHeading, SectionHeading, Body, Metadata as MetaText } from "@/components/ui/typography";
 
 export const metadata: Metadata = buildMetadata({
   title: "About Martin Sports",
@@ -11,29 +13,25 @@ export default async function AboutPage() {
   const owner = await ambassadorRepository.getOwnerProfile();
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="font-heading text-3xl font-semibold text-foreground">
-        About Martin Sports
-      </h1>
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+    <Container className="max-w-3xl py-16 sm:py-20">
+      <PageHeading>About Martin Sports</PageHeading>
+      <Body className="mt-4">
         Martin Sports is a Pakistan-based cricket equipment brand. Full brand
         story content is coming soon.
-      </p>
+      </Body>
 
-      <div className="mt-12 border-t border-border pt-8">
-        <h2 className="font-heading text-xl font-semibold text-foreground">
+      <div id="abdul-qayyum" className="mt-12 scroll-mt-24 border-t border-border pt-8">
+        <SectionHeading as="h2" className="text-xl sm:text-2xl">
           {owner.name}
-        </h2>
-        <p className="text-sm text-primary">{owner.role}</p>
-        <p className="text-sm text-muted-foreground">{owner.affiliation}</p>
+        </SectionHeading>
+        <MetaText className="mt-1 block text-brand normal-case">{owner.role}</MetaText>
+        <Body className="mt-1">{owner.affiliation}</Body>
         <div className="mt-4 space-y-3">
           {owner.bio.map((paragraph) => (
-            <p key={paragraph} className="text-sm leading-relaxed text-muted-foreground">
-              {paragraph}
-            </p>
+            <Body key={paragraph}>{paragraph}</Body>
           ))}
         </div>
       </div>
-    </div>
+    </Container>
   );
 }

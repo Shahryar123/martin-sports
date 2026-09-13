@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { ambassadorRepository } from "@/lib/repositories/ambassador-repository";
 import { buildMetadata } from "@/lib/seo";
+import { Container } from "@/components/shared/container";
+import { PageHeading, ProductHeading, Body, Metadata as MetaText } from "@/components/ui/typography";
 
 export const metadata: Metadata = buildMetadata({
   title: "Brand Ambassadors",
@@ -11,13 +13,11 @@ export default async function AmbassadorsPage() {
   const ambassadors = await ambassadorRepository.list();
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="font-heading text-3xl font-semibold text-foreground">
-        Brand Ambassadors
-      </h1>
-      <p className="mt-2 text-sm text-muted-foreground">
+    <Container className="max-w-5xl py-16 sm:py-20">
+      <PageHeading>Brand Ambassadors</PageHeading>
+      <Body className="mt-2">
         Placeholder profiles — real ambassador details coming soon.
-      </p>
+      </Body>
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
         {ambassadors.map((ambassador) => (
@@ -25,16 +25,14 @@ export default async function AmbassadorsPage() {
             key={ambassador.id}
             className="rounded-lg border border-border bg-card p-6"
           >
-            <p className="font-heading text-lg font-semibold text-foreground">
-              {ambassador.name}
-            </p>
-            <p className="text-sm text-primary">{ambassador.role}</p>
-            <p className="mt-3 text-sm text-muted-foreground">
-              {ambassador.bio}
-            </p>
+            <ProductHeading as="h2">{ambassador.name}</ProductHeading>
+            <MetaText className="mt-1 block text-brand normal-case">
+              {ambassador.role}
+            </MetaText>
+            <Body className="mt-3">{ambassador.bio}</Body>
           </div>
         ))}
       </div>
-    </div>
+    </Container>
   );
 }
