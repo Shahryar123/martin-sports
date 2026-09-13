@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // Serve AVIF when the browser supports it (smaller than WebP at
+    // comparable quality), falling back to WebP.
+    formats: ["image/avif", "image/webp"],
     // Placeholder catalog images under /public/placeholders are static,
     // locally-authored SVGs (not user-uploaded), so allowing SVG through
     // the image optimizer here is safe. Real product photography will be

@@ -6,6 +6,8 @@ import { PageHeading, SectionHeading, Body, Metadata as MetaText } from "@/compo
 
 export const metadata: Metadata = buildMetadata({
   title: "About Martin Sports",
+  description:
+    "Martin Sports is a Pakistan-based cricket equipment brand founded by athlete and cricket trainer Abdul Qayyum, based at the PIA Sports Complex, Karachi.",
   path: "/about",
 });
 

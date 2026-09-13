@@ -44,6 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: product.seo?.description ?? product.shortDescription,
     path: `/shop/${product.slug}`,
     image: product.images[0],
+    imageAlt: product.name,
   });
 }
 
@@ -57,13 +58,14 @@ export default async function ProductDetailPage({ params }: Props) {
   const effectivePrice = product.salePrice ?? product.price;
   const canonicalUrl = `${SITE_CONFIG.url}/shop/${product.slug}`;
 
-  const structuredData = {
+  const productStructuredData = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
     description: product.shortDescription,
     sku: product.sku,
     image: product.images,
+    category: getCategoryName(product.category),
     brand: { "@type": "Brand", name: product.brand },
     offers: {
       "@type": "Offer",
@@ -77,11 +79,30 @@ export default async function ProductDetailPage({ params }: Props) {
     },
   };
 
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Shop", item: `${SITE_CONFIG.url}/shop` },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: getCategoryName(product.category),
+        item: `${SITE_CONFIG.url}/shop?category=${product.category}`,
+      },
+      { "@type": "ListItem", position: 3, name: product.name, item: canonicalUrl },
+    ],
+  };
+
   return (
     <Container className="py-12 pb-28 sm:py-16 sm:pb-16">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productStructuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
       />
 
       <Breadcrumbs

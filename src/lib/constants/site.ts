@@ -9,7 +9,10 @@ export const SITE_CONFIG = {
   description:
     "Martin Sports is a Pakistan-based cricket equipment brand offering bats, balls, protective gear, footwear and accessories, with nationwide Cash on Delivery.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://martinsports.pk",
-  ogImage: "/og-image.jpg",
+  // Generated at request time by src/app/opengraph-image.tsx (next/og) —
+  // there's no real photography/design asset for this yet, so a code-drawn
+  // card is used instead of a broken/missing static file.
+  ogImage: "/opengraph-image",
   locale: "en_PK",
   currency: "PKR" as const,
 

@@ -5,6 +5,8 @@ import { PageHeading, Body } from "@/components/ui/typography";
 
 export const metadata: Metadata = buildMetadata({
   title: "Delivery & Cash on Delivery",
+  description:
+    "Martin Sports delivers cricket gear nationwide across Pakistan with Cash on Delivery — pay when your order arrives.",
   path: "/delivery",
 });
 

@@ -20,7 +20,14 @@ const STOCK_BADGE: Record<Product["stockStatus"], { label: string; variant: "suc
  * the WhatsApp button's own href, so the card wraps only the image/title,
  * not the whole tile.
  */
-export function ProductCard({ product }: { product: Product }) {
+type ProductCardProps = {
+  product: Product;
+  /** Set on above-the-fold cards (first row of a grid) so their image is
+   * eagerly loaded instead of lazy-loaded — see `ProductImage`. */
+  priority?: boolean;
+};
+
+export function ProductCard({ product, priority = false }: ProductCardProps) {
   const href = `/shop/${product.slug}`;
   const hasSale = !!product.salePrice && product.salePrice < product.price;
   const effectivePrice = product.salePrice ?? product.price;
@@ -37,6 +44,7 @@ export function ProductCard({ product }: { product: Product }) {
           name={product.name}
           category={product.category}
           className="aspect-square w-full transition-transform duration-300 group-hover:scale-[1.03]"
+          priority={priority}
         />
         <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-2">
           <Badge variant={stock.variant}>{stock.label}</Badge>

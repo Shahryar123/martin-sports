@@ -6,6 +6,9 @@ type BuildMetadataParams = {
   description?: string;
   path?: string; // e.g. "/products/some-slug"
   image?: string;
+  /** Alt text for the OG/Twitter image — real "image metadata", not just a
+   * URL. Defaults to the page title, which is always a meaningful string. */
+  imageAlt?: string;
   noIndex?: boolean;
 };
 
@@ -19,6 +22,7 @@ export function buildMetadata({
   description = SITE_CONFIG.description,
   path = "/",
   image = SITE_CONFIG.ogImage,
+  imageAlt = title,
   noIndex = false,
 }: BuildMetadataParams): Metadata {
   const url = new URL(path, SITE_CONFIG.url).toString();
@@ -33,7 +37,7 @@ export function buildMetadata({
       description,
       url,
       siteName: SITE_CONFIG.name,
-      images: [{ url: image }],
+      images: [{ url: image, alt: imageAlt }],
       locale: SITE_CONFIG.locale,
       type: "website",
     },
@@ -41,7 +45,7 @@ export function buildMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [image],
+      images: [{ url: image, alt: imageAlt }],
     },
   };
 }

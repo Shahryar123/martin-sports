@@ -8,6 +8,8 @@ import { WhatsAppButton } from "@/components/shared/whatsapp-button";
 
 export const metadata: Metadata = buildMetadata({
   title: "Contact Us",
+  description:
+    "Get in touch with Martin Sports by WhatsApp, phone or email — order cricket gear or ask about sizing and availability.",
   path: "/contact",
 });
 

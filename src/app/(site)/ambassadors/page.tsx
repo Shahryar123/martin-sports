@@ -6,6 +6,8 @@ import { PageHeading, ProductHeading, Body, Metadata as MetaText } from "@/compo
 
 export const metadata: Metadata = buildMetadata({
   title: "Brand Ambassadors",
+  description:
+    "Meet the cricketers and athletes who represent Martin Sports on and off the field.",
   path: "/ambassadors",
 });
 

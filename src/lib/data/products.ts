@@ -59,7 +59,7 @@ export const PRODUCTS: Product[] = [
     published: true,
     tags: ["willow", "pro-series", "batting"],
     seo: {
-      title: "English Willow Cricket Bat — Pro Series | Martin Sports",
+      title: "English Willow Cricket Bat — Pro Series",
       description:
         "Grade 1 English willow cricket bat with a forgiving sweet spot, hand-pressed finish. Nationwide delivery, Cash on Delivery.",
     },
@@ -269,7 +269,7 @@ export const PRODUCTS: Product[] = [
     published: true,
     tags: ["helmet", "protective"],
     seo: {
-      title: "Cricket Helmet with Titanium Grille | Martin Sports",
+      title: "Cricket Helmet with Titanium Grille",
       description:
         "Ventilated ABS shell cricket helmet with a titanium-alloy grille and adjustable dial fit. Cash on Delivery, nationwide across Pakistan.",
     },

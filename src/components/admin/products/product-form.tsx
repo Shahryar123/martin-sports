@@ -540,6 +540,9 @@ export function ProductForm({ mode, product, categories }: ProductFormProps) {
         <div className="space-y-1.5">
           <Label htmlFor="seoTitle">SEO Title (optional)</Label>
           <Input id="seoTitle" {...register("seoTitle")} />
+          <p className="text-xs text-muted-foreground">
+            Don&apos;t include &quot;Martin Sports&quot; — it&apos;s added automatically.
+          </p>
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="seoDescription">SEO Description (optional)</Label>

@@ -72,7 +72,7 @@ export function SearchTrigger() {
         size="icon"
         aria-label="Search products"
         onClick={() => setOpen(true)}
-        className="size-9"
+        className="size-11"
       >
         <Search className="size-[18px]" />
       </Button>

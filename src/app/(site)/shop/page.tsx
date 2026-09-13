@@ -12,16 +12,54 @@ import { getCategoryName } from "@/lib/constants/categories";
 import { buildListParams, getSelectedCategories, type ShopSearchParams } from "@/lib/shop/params";
 import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Shop All Products",
-  path: "/shop",
-});
-
 const PAGE_SIZE = 12;
 
 type Props = {
   searchParams: Promise<ShopSearchParams>;
 };
+
+/**
+ * Shop is one route serving many facets (category, search, price, stock,
+ * sort, page) via query params. To avoid duplicate-content across the
+ * combinatorial filter permutations while still giving genuinely distinct
+ * content (a single category) its own indexable, canonical URL:
+ * - a search query is `noindex` (thin/volatile results page, standard
+ *   practice — not something worth ranking on its own),
+ * - exactly one selected category gets a category-specific title/
+ *   description and canonicals to its own clean `/shop?category=<slug>`,
+ * - everything else (no filters, or a multi-filter/sort/price combination)
+ *   canonicalizes back to the plain `/shop` listing.
+ */
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const rawParams = await searchParams;
+  const selectedCategories = getSelectedCategories(rawParams);
+  const singleCategory = selectedCategories.length === 1 ? selectedCategories[0] : null;
+
+  if (rawParams.search) {
+    return buildMetadata({
+      title: `Search Results for "${rawParams.search}"`,
+      description: `Products matching "${rawParams.search}" at Martin Sports.`,
+      path: "/shop",
+      noIndex: true,
+    });
+  }
+
+  if (singleCategory) {
+    const categoryName = rawParams.label ?? getCategoryName(singleCategory);
+    return buildMetadata({
+      title: categoryName,
+      description: `Shop ${categoryName} at Martin Sports — nationwide delivery across Pakistan with Cash on Delivery.`,
+      path: `/shop?category=${singleCategory}`,
+    });
+  }
+
+  return buildMetadata({
+    title: "Shop All Products",
+    description:
+      "Browse the full Martin Sports catalog — cricket bats, balls, protective gear, footwear and accessories, with nationwide Cash on Delivery.",
+    path: "/shop",
+  });
+}
 
 export default async function ShopPage({ searchParams }: Props) {
   const rawParams = await searchParams;
