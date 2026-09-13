@@ -2,6 +2,7 @@ export type CartLineItem = {
   productId: string;
   productSlug: string;
   productName: string;
+  sku: string;
   variantId?: string;
   variantLabel?: string;
   unitPrice: number;

@@ -2,8 +2,8 @@ import Link from "next/link";
 import { ProductImage } from "@/components/products/product-image";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { WhatsAppButton } from "@/components/shared/whatsapp-button";
+import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ProductHeading, Metadata, Caption } from "@/components/ui/typography";
 import { getCategoryName } from "@/lib/constants/categories";
 import type { Product } from "@/types";
@@ -63,9 +63,18 @@ export function ProductCard({ product }: { product: Product }) {
         />
 
         <div className="mt-auto flex items-center gap-2 pt-3">
-          <Button asChild variant="outline" size="sm" className="h-11 flex-1">
-            <Link href={href}>View Details</Link>
-          </Button>
+          <AddToCartButton
+            className="flex-1"
+            disabled={product.stockStatus === "out-of-stock"}
+            item={{
+              productId: product.id,
+              productSlug: product.slug,
+              productName: product.name,
+              sku: product.sku,
+              unitPrice: effectivePrice,
+              image: product.images[0] ?? "",
+            }}
+          />
           <WhatsAppButton
             variant="icon"
             items={[
@@ -73,6 +82,7 @@ export function ProductCard({ product }: { product: Product }) {
                 productId: product.id,
                 productSlug: product.slug,
                 productName: product.name,
+                sku: product.sku,
                 unitPrice: effectivePrice,
                 quantity: 1,
                 image: product.images[0] ?? "",

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { PRIMARY_NAV } from "@/lib/constants/nav";
 import { SITE_CONFIG } from "@/lib/constants/site";
 import { WhatsAppButton } from "@/components/shared/whatsapp-button";
+import { CartButton } from "@/components/cart/cart-button";
 import { SearchTrigger } from "@/components/layout/search-trigger";
 import { CategoryNavMenu } from "@/components/layout/category-nav-menu";
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -53,6 +54,7 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-1">
           <SearchTrigger />
+          <CartButton />
           <div className="hidden lg:block">
             <WhatsAppButton size="sm" />
           </div>

@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { WhatsAppButton } from "@/components/shared/whatsapp-button";
+import { QuantityStepper } from "@/components/shared/quantity-stepper";
+import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { Badge } from "@/components/ui/badge";
+import { formatPKR } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 import type { Product, StockStatus } from "@/types";
 
@@ -17,6 +20,7 @@ export function ProductBuyBox({ product }: { product: Product }) {
   const [selectedSizeId, setSelectedSizeId] = useState(
     () => product.sizes?.find((s) => s.inStock)?.id ?? product.sizes?.[0]?.id,
   );
+  const [quantity, setQuantity] = useState(1);
   const selectedSize = product.sizes?.find((s) => s.id === selectedSizeId);
 
   const priceDelta = selectedSize?.priceDelta ?? 0;
@@ -24,6 +28,21 @@ export function ProductBuyBox({ product }: { product: Product }) {
   const originalPrice = product.salePrice ? product.price + priceDelta : undefined;
   const canOrder = selectedSize ? selectedSize.inStock : product.stockStatus !== "out-of-stock";
   const stock = STOCK_COPY[product.stockStatus];
+  const maxQuantity =
+    product.stockStatus === "low-stock" && typeof product.quantity === "number"
+      ? Math.max(1, product.quantity)
+      : 99;
+
+  const lineItem = {
+    productId: product.id,
+    productSlug: product.slug,
+    productName: product.name,
+    sku: selectedSize?.sku ?? product.sku,
+    variantId: selectedSize?.id,
+    variantLabel: selectedSize?.label,
+    unitPrice: effectivePrice,
+    image: product.images[0] ?? "",
+  };
 
   return (
     <div>
@@ -63,36 +82,63 @@ export function ProductBuyBox({ product }: { product: Product }) {
         </div>
       )}
 
-      <div className="mt-6">
+      {canOrder && (
+        <div className="mt-5">
+          <p className="mb-2 text-sm font-medium text-foreground">Quantity</p>
+          <QuantityStepper quantity={quantity} onChange={setQuantity} max={maxQuantity} />
+        </div>
+      )}
+
+      {/* Inline actions — hidden on small screens in favor of the sticky
+          mobile bar below, so the same choice isn't offered twice. */}
+      <div className="mt-6 hidden gap-3 sm:flex">
         {canOrder ? (
-          <WhatsAppButton
-            label="Order on WhatsApp"
-            size="lg"
-            className="w-full sm:w-auto"
-            items={[
-              {
-                productId: product.id,
-                productSlug: product.slug,
-                productName: product.name,
-                variantId: selectedSize?.id,
-                variantLabel: selectedSize?.label,
-                unitPrice: effectivePrice,
-                quantity: 1,
-                image: product.images[0] ?? "",
-              },
-            ]}
-          />
+          <>
+            <AddToCartButton
+              item={lineItem}
+              quantity={quantity}
+              size="lg"
+              className="flex-1 sm:flex-none"
+            />
+            <WhatsAppButton
+              label="Order on WhatsApp"
+              size="lg"
+              className="flex-1 sm:flex-none"
+              items={[{ ...lineItem, quantity }]}
+            />
+          </>
         ) : (
-          <WhatsAppButton
-            label="Ask About Restock"
-            variant="outline"
-            size="lg"
-            className="w-full sm:w-auto"
-          />
+          <WhatsAppButton label="Ask About Restock" variant="outline" size="lg" />
         )}
-        <p className="mt-3 text-xs text-muted-foreground">
-          Cash on Delivery · Nationwide delivery across Pakistan
-        </p>
+      </div>
+
+      <p className="mt-3 hidden text-xs text-muted-foreground sm:block">
+        Cash on Delivery · Nationwide delivery across Pakistan. Opening
+        WhatsApp only prepares your order message — it isn&apos;t confirmed
+        until you send it and we reply.
+      </p>
+
+      {/* Sticky mobile CTA bar — always reachable while scrolling the long
+          description/specs sections below, without permanently covering
+          content (the page reserves bottom padding for it on small
+          screens; see product detail page). */}
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface-0/95 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-surface-0/90 sm:hidden">
+        {canOrder ? (
+          <div className="flex items-center gap-2">
+            <div className="mr-1 shrink-0">
+              <p className="text-sm font-semibold text-brand">{formatPKR(effectivePrice)}</p>
+            </div>
+            <AddToCartButton item={lineItem} quantity={quantity} size="lg" className="flex-1" />
+            <WhatsAppButton
+              label="Order"
+              size="lg"
+              className="flex-1"
+              items={[{ ...lineItem, quantity }]}
+            />
+          </div>
+        ) : (
+          <WhatsAppButton label="Ask About Restock" variant="outline" size="lg" className="w-full" />
+        )}
       </div>
     </div>
   );

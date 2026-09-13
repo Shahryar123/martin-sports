@@ -18,15 +18,16 @@ type WhatsAppButtonProps = {
   /** Order context — when given, the message lists these item(s) instead
    * of the generic contact greeting. */
   items?: CartLineItem[];
+  orderReference?: string;
   className?: string;
 };
 
 const GENERIC_MESSAGE =
   "Hello Martin Sports, I have a question about your products.";
 
-function buildHref(items?: CartLineItem[]) {
+function buildHref(items?: CartLineItem[], orderReference?: string) {
   if (items?.length) {
-    return buildWhatsAppOrderLink({ items });
+    return buildWhatsAppOrderLink({ items, orderReference });
   }
   return `https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent(GENERIC_MESSAGE)}`;
 }
@@ -42,9 +43,10 @@ export function WhatsAppButton({
   size = "default",
   label = "Order via WhatsApp",
   items,
+  orderReference,
   className,
 }: WhatsAppButtonProps) {
-  const href = buildHref(items);
+  const href = buildHref(items, orderReference);
 
   if (variant === "icon") {
     return (

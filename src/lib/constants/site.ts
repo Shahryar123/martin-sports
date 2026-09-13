@@ -13,8 +13,9 @@ export const SITE_CONFIG = {
   locale: "en_PK",
   currency: "PKR" as const,
 
-  // PLACEHOLDER — replace with the real WhatsApp business number (E.164, no leading +/00)
-  whatsappNumber: "923000000000",
+  // Sourced from NEXT_PUBLIC_WHATSAPP_NUMBER so it's configured in one place,
+  // not hardcoded across components (E.164, no leading +/00).
+  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "923000000000",
 
   contact: {
     // PLACEHOLDER contact details

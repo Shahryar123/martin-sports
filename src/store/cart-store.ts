@@ -4,6 +4,7 @@ import type { CartLineItem } from "@/types";
 
 type CartState = {
   items: CartLineItem[];
+  hasHydrated: boolean;
   addItem: (item: CartLineItem) => void;
   removeItem: (productId: string, variantId?: string) => void;
   updateQuantity: (
@@ -14,6 +15,7 @@ type CartState = {
   clear: () => void;
   subtotal: () => number;
   itemCount: () => number;
+  setHasHydrated: (hydrated: boolean) => void;
 };
 
 function sameLine(
@@ -28,6 +30,7 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      hasHydrated: false,
 
       addItem: (item) =>
         set((state) => {
@@ -73,7 +76,14 @@ export const useCartStore = create<CartState>()(
 
       itemCount: () =>
         get().items.reduce((sum, item) => sum + item.quantity, 0),
+
+      setHasHydrated: (hydrated) => set({ hasHydrated: hydrated }),
     }),
-    { name: "martin-sports-cart" },
+    {
+      name: "martin-sports-cart",
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
+    },
   ),
 );

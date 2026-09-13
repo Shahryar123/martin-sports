@@ -78,7 +78,7 @@ export default async function ProductDetailPage({ params }: Props) {
   };
 
   return (
-    <Container className="py-12 sm:py-16">
+    <Container className="py-12 pb-28 sm:py-16 sm:pb-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -132,14 +132,20 @@ export default async function ProductDetailPage({ params }: Props) {
             </dl>
           )}
 
-          <div className="mt-6 grid grid-cols-1 gap-3 border-t border-border pt-6 sm:grid-cols-2">
-            <div className="flex items-start gap-2.5 text-sm text-foreground-secondary">
-              <Truck className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={1.75} />
-              Nationwide delivery across Pakistan
-            </div>
-            <div className="flex items-start gap-2.5 text-sm text-foreground-secondary">
-              <Banknote className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={1.75} />
-              Cash on Delivery — pay when it arrives
+          <div className="mt-6 border-t border-border pt-6">
+            <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
+              <Banknote className="size-4 shrink-0 text-brand" strokeWidth={1.75} />
+              Cash on Delivery Available Across Pakistan
+            </p>
+            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="flex items-start gap-2.5 text-sm text-foreground-secondary">
+                <Truck className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={1.75} />
+                Nationwide delivery across Pakistan
+              </div>
+              <div className="flex items-start gap-2.5 text-sm text-foreground-secondary">
+                <Banknote className="mt-0.5 size-4 shrink-0 text-brand" strokeWidth={1.75} />
+                Pay in cash when your order arrives
+              </div>
             </div>
           </div>
         </div>
