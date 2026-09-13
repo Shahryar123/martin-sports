@@ -15,6 +15,9 @@ type AddToCartButtonProps = {
   label?: string;
   variant?: "default" | "outline" | "secondary";
   size?: "default" | "sm" | "lg";
+  /** Product cards are too narrow to fit the icon + label + the adjacent
+   * WhatsApp icon button without overflowing — omit it there. */
+  showIcon?: boolean;
   className?: string;
 };
 
@@ -31,6 +34,7 @@ export function AddToCartButton({
   label = "Add to Cart",
   variant = "outline",
   size = "sm",
+  showIcon = true,
   className,
 }: AddToCartButtonProps) {
   const router = useRouter();
@@ -58,8 +62,8 @@ export function AddToCartButton({
       disabled={disabled}
       onClick={handleClick}
     >
-      <ShoppingCart className="size-4" />
-      {disabled ? "Out of Stock" : label}
+      {showIcon && !disabled && <ShoppingCart className="size-4" />}
+      <span className="truncate">{disabled ? "Sold Out" : label}</span>
     </Button>
   );
 }

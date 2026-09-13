@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { WhatsAppButton } from "@/components/shared/whatsapp-button";
 import { CartLineItemRow } from "@/components/cart/cart-line-item";
 import { useCartStore } from "@/store/cart-store";
+import { useMounted } from "@/hooks/use-mounted";
 import { formatPKR } from "@/lib/currency";
 import { generateOrderReference } from "@/lib/whatsapp";
 import type { CartLineItem } from "@/types";
@@ -16,7 +17,7 @@ import type { CartLineItem } from "@/types";
 export function CartView() {
   const items = useCartStore((state) => state.items);
   const clear = useCartStore((state) => state.clear);
-  const hasHydrated = useCartStore((state) => state.hasHydrated);
+  const mounted = useMounted();
   const [orderReference] = useState(() => generateOrderReference());
 
   const subtotal = useMemo(
@@ -38,7 +39,7 @@ export function CartView() {
     });
   }
 
-  if (!hasHydrated) {
+  if (!mounted) {
     return <div className="h-64" aria-hidden />;
   }
 

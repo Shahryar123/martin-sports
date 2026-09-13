@@ -63,32 +63,38 @@ export function ProductCard({ product }: { product: Product }) {
         />
 
         <div className="mt-auto flex items-center gap-2 pt-3">
-          <AddToCartButton
-            className="flex-1"
-            disabled={product.stockStatus === "out-of-stock"}
-            item={{
-              productId: product.id,
-              productSlug: product.slug,
-              productName: product.name,
-              sku: product.sku,
-              unitPrice: effectivePrice,
-              image: product.images[0] ?? "",
-            }}
-          />
-          <WhatsAppButton
-            variant="icon"
-            items={[
-              {
-                productId: product.id,
-                productSlug: product.slug,
-                productName: product.name,
-                sku: product.sku,
-                unitPrice: effectivePrice,
-                quantity: 1,
-                image: product.images[0] ?? "",
-              },
-            ]}
-          />
+          {product.stockStatus === "out-of-stock" ? (
+            <WhatsAppButton variant="outline" label="Ask About Restock" className="h-11 w-full" />
+          ) : (
+            <>
+              <AddToCartButton
+                className="min-w-0 flex-1"
+                label="Add"
+                item={{
+                  productId: product.id,
+                  productSlug: product.slug,
+                  productName: product.name,
+                  sku: product.sku,
+                  unitPrice: effectivePrice,
+                  image: product.images[0] ?? "",
+                }}
+              />
+              <WhatsAppButton
+                variant="icon"
+                items={[
+                  {
+                    productId: product.id,
+                    productSlug: product.slug,
+                    productName: product.name,
+                    sku: product.sku,
+                    unitPrice: effectivePrice,
+                    quantity: 1,
+                    image: product.images[0] ?? "",
+                  },
+                ]}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -4,12 +4,14 @@ import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cart-store";
+import { useMounted } from "@/hooks/use-mounted";
 import { cn } from "@/lib/utils";
 
 /** Header cart icon with a live item-count badge — always visible, not
  * tucked behind the mobile menu, so the cart stays one tap away. */
 export function CartButton({ className }: { className?: string }) {
-  const itemCount = useCartStore((state) => state.itemCount());
+  const rawItemCount = useCartStore((state) => state.itemCount());
+  const itemCount = useMounted() ? rawItemCount : 0;
 
   return (
     <Button
