@@ -11,7 +11,7 @@ export function CategoryGrid() {
         <SectionHeader
           eyebrow="Shop by Category"
           title="Everything for Your Kit"
-          description="From the bat in your hands to the bag on your shoulder — browse the full range by category."
+          description="From the bat in your hands to the bag on your shoulder, browse the full range by category."
         />
       </Reveal>
 

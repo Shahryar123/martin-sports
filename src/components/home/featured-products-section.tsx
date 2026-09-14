@@ -14,14 +14,17 @@ type FeaturedProductsSectionProps = {
   priorityCount?: number;
 };
 
-export function FeaturedProductsSection({ products, priorityCount = 0 }: FeaturedProductsSectionProps) {
+export function FeaturedProductsSection({
+  products,
+  priorityCount = 0,
+}: FeaturedProductsSectionProps) {
   return (
     <Section>
       <Reveal>
         <SectionHeader
           eyebrow="The Collection"
           title="Featured Products"
-          description="Placeholder catalog — real product photography and details coming soon."
+          description="Browse our curated selection of cricket gear, handpicked for quality and performance."
           action={
             <Link
               href="/shop"

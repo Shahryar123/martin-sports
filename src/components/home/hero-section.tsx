@@ -36,8 +36,8 @@ export function HeroSection({ homepage }: { homepage: HomepageContent }) {
       <Container
         className={
           hasImage
-            ? "relative min-h-[420px] py-20 sm:min-h-[480px] lg:min-h-[600px] lg:py-28"
-            : "relative grid grid-cols-1 items-center gap-12 py-20 lg:grid-cols-2 lg:gap-8 lg:py-28"
+            ? "relative min-h-[420px] pb-20 pt-10 sm:min-h-[480px] lg:min-h-[600px] lg:pb-28 lg:pt-14"
+            : "relative grid grid-cols-1 items-center gap-12 pb-20 pt-10 lg:grid-cols-2 lg:gap-8 lg:pb-28 lg:pt-14"
         }
       >
         <div className={hasImage ? "flex h-full max-w-xl flex-col justify-center" : undefined}>
