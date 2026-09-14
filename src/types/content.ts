@@ -16,6 +16,9 @@ export type HomepageContent = {
   heroSubheading: string;
   heroCtaLabel: string;
   heroCtaHref: string;
+  /** Path/URL for the hero banner photo; empty string falls back to the
+   * illustrated `HeroGraphic`. */
+  heroImage: string;
   updatedAt: string;
 };
 

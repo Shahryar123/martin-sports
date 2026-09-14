@@ -19,6 +19,15 @@ export const homepageFormSchema = z.object({
   heroSubheading: z.string().trim().min(1, "Subheading is required").max(400),
   heroCtaLabel: z.string().trim().min(1, "CTA label is required").max(40),
   heroCtaHref: z.string().trim().min(1, "CTA link is required"),
+  heroImage: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal(""))
+    .refine(
+      (v) => !v || v.startsWith("/") || /^https?:\/\//.test(v),
+      "Enter a path starting with / or a full https:// URL",
+    ),
 });
 export type HomepageFormValues = z.infer<typeof homepageFormSchema>;
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { productRepository } from "@/lib/repositories/product-repository";
 import { ambassadorRepository } from "@/lib/repositories/ambassador-repository";
 import { testimonialRepository } from "@/lib/repositories/testimonial-repository";
+import { contentRepository } from "@/lib/repositories/content-repository";
 import { buildMetadata } from "@/lib/seo";
 
 import { HeroSection } from "@/components/home/hero-section";
@@ -22,16 +23,17 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default async function HomePage() {
-  const [featured, ambassadors, owner, testimonials] = await Promise.all([
+  const [featured, ambassadors, owner, testimonials, homepage] = await Promise.all([
     productRepository.getFeatured(4),
     ambassadorRepository.list(),
     ambassadorRepository.getOwnerProfile(),
     testimonialRepository.list(),
+    contentRepository.getHomepage(),
   ]);
 
   return (
     <div>
-      <HeroSection />
+      <HeroSection homepage={homepage} />
       <CategoryGrid />
       <FeaturedProductsSection products={featured} priorityCount={2} />
       <AmbassadorsSection ambassadors={ambassadors} />

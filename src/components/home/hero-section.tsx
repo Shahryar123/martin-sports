@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,28 +8,51 @@ import { MotionPress } from "@/components/shared/motion-press";
 import { WhatsAppButton } from "@/components/shared/whatsapp-button";
 import { HeroHeading, Body } from "@/components/ui/typography";
 import { HeroGraphic } from "@/components/home/hero-graphic";
+import type { HomepageContent } from "@/types";
 
-export function HeroSection() {
+export function HeroSection({ homepage }: { homepage: HomepageContent }) {
+  const hasImage = Boolean(homepage.heroImage);
+
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-surface-1/60 via-background to-background" />
-      <Container className="relative grid grid-cols-1 items-center gap-12 py-20 lg:grid-cols-2 lg:gap-8 lg:py-28">
-        <div>
+      {hasImage ? (
+        <>
+          <Image
+            src={homepage.heroImage}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          {/* Light scrim, only strong enough near the text column to keep it
+              readable — deliberately not covering the photo. */}
+          <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/25 to-transparent" />
+        </>
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-b from-surface-1/60 via-background to-background" />
+      )}
+
+      <Container
+        className={
+          hasImage
+            ? "relative min-h-[420px] py-20 sm:min-h-[480px] lg:min-h-[600px] lg:py-28"
+            : "relative grid grid-cols-1 items-center gap-12 py-20 lg:grid-cols-2 lg:gap-8 lg:py-28"
+        }
+      >
+        <div className={hasImage ? "flex h-full max-w-xl flex-col justify-center" : undefined}>
           <Badge variant="secondary" className="mb-6">
             Nationwide Delivery · Cash on Delivery
           </Badge>
-          <HeroHeading>Built for the Game. Trusted by Cricketers.</HeroHeading>
+          <HeroHeading>{homepage.heroHeading}</HeroHeading>
           <Body className="mt-6 max-w-xl text-base sm:text-lg">
-            Martin Sports is a Pakistan-based cricket equipment brand — bats,
-            balls, protective gear, footwear and accessories chosen with real
-            coaching experience behind them, delivered nationwide with Cash
-            on Delivery.
+            {homepage.heroSubheading}
           </Body>
           <div className="mt-10 flex flex-wrap gap-4">
             <MotionPress>
               <Button size="lg" asChild>
-                <Link href="/shop">
-                  Shop the Collection
+                <Link href={homepage.heroCtaHref}>
+                  {homepage.heroCtaLabel}
                   <ArrowRight className="size-4" />
                 </Link>
               </Button>
@@ -39,9 +63,11 @@ export function HeroSection() {
           </div>
         </div>
 
-        <div className="hidden lg:block">
-          <HeroGraphic />
-        </div>
+        {!hasImage && (
+          <div className="hidden lg:block">
+            <HeroGraphic />
+          </div>
+        )}
       </Container>
     </section>
   );

@@ -22,6 +22,7 @@ export const HOMEPAGE_CONTENT: HomepageContent = {
     "Martin Sports is a Pakistan-based cricket equipment brand — bats, balls, protective gear, footwear and accessories chosen with real coaching experience behind them, delivered nationwide with Cash on Delivery.",
   heroCtaLabel: "Shop the Collection",
   heroCtaHref: "/shop",
+  heroImage: "/banner-home.jpg",
   updatedAt: SEED_TIMESTAMP,
 };
 

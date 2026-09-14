@@ -85,8 +85,12 @@ export async function updateHomepageAction(
   }
 
   try {
-    const homepage = await contentRepository.updateHomepage(parsed.data);
+    const homepage = await contentRepository.updateHomepage({
+      ...parsed.data,
+      heroImage: parsed.data.heroImage ?? "",
+    });
     revalidatePath("/admin/content");
+    revalidatePath("/");
     return { success: true, data: homepage };
   } catch (error) {
     return actionError(error, "Could not update the homepage content.");
