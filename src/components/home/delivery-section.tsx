@@ -22,7 +22,7 @@ export function DeliverySection() {
               Nationwide Delivery Across Pakistan
             </SectionHeading>
             <Body className="mt-4 max-w-lg">
-              Wherever you play, we deliver — from major cities to smaller
+              Wherever you play, we deliver from major cities to smaller
               towns across the country. Every order ships with Cash on
               Delivery, so you pay only once it&apos;s in your hands. Exact
               delivery times vary by location.

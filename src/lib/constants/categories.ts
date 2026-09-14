@@ -73,7 +73,6 @@ export const HOMEPAGE_CATEGORY_GROUPS: ReadonlyArray<{
   { label: "Shoes", icon: Footprints, slugs: ["shoes"] },
   { label: "Kit Bags", icon: Briefcase, slugs: ["kit-bags"] },
   { label: "Accessories", icon: Wrench, slugs: ["accessories", "bat-grips"] },
-  { label: "Training Equipment", icon: Dumbbell, slugs: ["training-equipment"] },
 ];
 
 export function homepageCategoryHref(group: (typeof HOMEPAGE_CATEGORY_GROUPS)[number]): string {
