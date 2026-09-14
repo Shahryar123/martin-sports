@@ -39,7 +39,7 @@ export default async function AmbassadorsPage() {
     <Container className="max-w-5xl py-16 sm:py-20">
       <PageHeading>Brand Ambassadors</PageHeading>
       <Body className="mt-2">
-        Placeholder profiles — real ambassador details coming soon.
+        Meet the cricketers and athletes who represent Martin Sports on and off the field. Full profiles coming soon.
       </Body>
 
       <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
