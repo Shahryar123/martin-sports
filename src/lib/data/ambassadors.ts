@@ -25,9 +25,9 @@ export const AMBASSADORS: Ambassador[] = [
   {
     id: "amb-02",
     slug: "ambassador-two",
-    name: "Ambassador Two",
+    name: "Saim Ayub",
     role: "Brand Ambassador",
-    photo: "",
+    photo: "/ambassador/saim-ambassador-2.jpg",
     bio: "Profile details to be provided by Martin Sports.",
     achievements: [],
     socialLinks: [],
