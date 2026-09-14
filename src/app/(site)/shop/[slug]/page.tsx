@@ -11,6 +11,7 @@ import { productRepository } from "@/lib/repositories/product-repository";
 import { getCategoryName } from "@/lib/constants/categories";
 import { SITE_CONFIG } from "@/lib/constants/site";
 import { buildMetadata } from "@/lib/seo";
+import { toJsonLd } from "@/lib/structured-data";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -98,11 +99,11 @@ export default async function ProductDetailPage({ params }: Props) {
     <Container className="py-12 pb-28 sm:py-16 sm:pb-16">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productStructuredData) }}
+        dangerouslySetInnerHTML={{ __html: toJsonLd(productStructuredData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
+        dangerouslySetInnerHTML={{ __html: toJsonLd(breadcrumbStructuredData) }}
       />
 
       <Breadcrumbs

@@ -1,11 +1,14 @@
 "use server";
 
+import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { requireAdminSession } from "@/lib/auth/guard";
 import { productRepository } from "@/lib/repositories/product-repository";
 import { productFormSchema, type ProductFormValues } from "@/lib/validations/product";
 import { actionError, type ActionResult } from "@/lib/actions/types";
 import type { Product } from "@/types";
+
+const productFlagSchema = z.enum(["published", "featured", "isNew", "bestSeller"]);
 
 function toWriteInput(values: ProductFormValues) {
   const [mainImage, ...rest] = values.images;
@@ -127,8 +130,13 @@ export async function toggleProductFlagAction(
     return { success: false, error: "Your session has expired. Please sign in again." };
   }
 
+  const parsedFlag = productFlagSchema.safeParse(flag);
+  if (!parsedFlag.success) {
+    return { success: false, error: "Invalid field." };
+  }
+
   try {
-    const product = await productRepository.update(id, { [flag]: value });
+    const product = await productRepository.update(id, { [parsedFlag.data]: value });
     revalidateProductPaths();
     return { success: true, data: product };
   } catch (error) {

@@ -1,4 +1,5 @@
 import { SITE_CONFIG } from "@/lib/constants/site";
+import { toJsonLd } from "@/lib/structured-data";
 
 /**
  * Site-wide Organization + WebSite JSON-LD, rendered once by the public
@@ -38,7 +39,7 @@ export function SiteStructuredData() {
         <script
           key={entry["@type"]}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(entry) }}
+          dangerouslySetInnerHTML={{ __html: toJsonLd(entry) }}
         />
       ))}
     </>
