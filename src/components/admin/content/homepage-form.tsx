@@ -15,7 +15,12 @@ export function HomepageForm({ homepage }: { homepage: HomepageContent }) {
   const [isPending, startTransition] = useTransition();
   const [formError, setFormError] = useState<string | null>(null);
 
-  const { register, handleSubmit } = useForm<HomepageFormValues>({
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<HomepageFormValues>({
     defaultValues: {
       heroHeading: homepage.heroHeading,
       heroSubheading: homepage.heroSubheading,
@@ -28,6 +33,11 @@ export function HomepageForm({ homepage }: { homepage: HomepageContent }) {
     setFormError(null);
     const parsed = homepageFormSchema.safeParse(values);
     if (!parsed.success) {
+      for (const issue of parsed.error.issues) {
+        if (issue.path[0]) {
+          setError(issue.path[0] as keyof HomepageFormValues, { message: issue.message });
+        }
+      }
       setFormError(parsed.error.issues[0]?.message ?? "Invalid input");
       return;
     }
@@ -56,19 +66,31 @@ export function HomepageForm({ homepage }: { homepage: HomepageContent }) {
         <div className="space-y-1.5">
           <Label htmlFor="heroHeading">Heading</Label>
           <Input id="heroHeading" {...register("heroHeading")} />
+          {errors.heroHeading && (
+            <p className="text-sm text-destructive">{errors.heroHeading.message}</p>
+          )}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="heroSubheading">Subheading</Label>
           <Textarea id="heroSubheading" rows={3} {...register("heroSubheading")} />
+          {errors.heroSubheading && (
+            <p className="text-sm text-destructive">{errors.heroSubheading.message}</p>
+          )}
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1.5">
             <Label htmlFor="heroCtaLabel">CTA Label</Label>
             <Input id="heroCtaLabel" {...register("heroCtaLabel")} />
+            {errors.heroCtaLabel && (
+              <p className="text-sm text-destructive">{errors.heroCtaLabel.message}</p>
+            )}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="heroCtaHref">CTA Link</Label>
             <Input id="heroCtaHref" {...register("heroCtaHref")} />
+            {errors.heroCtaHref && (
+              <p className="text-sm text-destructive">{errors.heroCtaHref.message}</p>
+            )}
           </div>
         </div>
       </section>

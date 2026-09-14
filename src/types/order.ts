@@ -7,6 +7,9 @@ export type CartLineItem = {
   variantLabel?: string;
   unitPrice: number;
   quantity: number;
+  /** Caps the cart-row quantity stepper (e.g. remaining stock for a
+   * low-stock size). Undefined = no extra cap beyond the stepper default. */
+  maxQuantity?: number;
   image: string;
 };
 

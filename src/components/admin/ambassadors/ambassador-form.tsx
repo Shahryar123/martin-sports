@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Plus, Trash2 } from "lucide-react";
+import { ImageOff, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -56,6 +56,38 @@ type AmbassadorFormProps = {
   mode: "create" | "edit";
   ambassador?: Ambassador;
 };
+
+/** Small live preview for an admin-entered image path/URL — there's no file
+ * upload, so this catches a typo'd or dead URL before save. */
+function ImagePreview({ url }: { url: string }) {
+  // Track which URL failed to load (rather than a plain broken/ok boolean)
+  // so a change to `url` clears the broken state on its own during render —
+  // no effect needed to "reset" it.
+  const [brokenUrl, setBrokenUrl] = useState<string | null>(null);
+
+  if (!url) return null;
+
+  if (brokenUrl === url) {
+    return (
+      <div
+        className="flex size-10 shrink-0 items-center justify-center rounded-full border border-dashed border-border bg-surface-1"
+        title="Image failed to load"
+      >
+        <ImageOff className="size-4 text-muted-foreground" />
+      </div>
+    );
+  }
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={url}
+      alt=""
+      onError={() => setBrokenUrl(url)}
+      className="size-10 shrink-0 rounded-full border border-border object-cover"
+    />
+  );
+}
 
 export function AmbassadorForm({ mode, ambassador }: AmbassadorFormProps) {
   const router = useRouter();
@@ -151,7 +183,10 @@ export function AmbassadorForm({ mode, ambassador }: AmbassadorFormProps) {
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="photo">Photo (path or URL)</Label>
-            <Input id="photo" {...register("photo")} placeholder="/placeholders/ambassador.jpg" />
+            <div className="flex items-start gap-2">
+              <Input id="photo" {...register("photo")} placeholder="/placeholders/ambassador.jpg" />
+              <ImagePreview url={watch("photo")} />
+            </div>
             {errors.photo && <p className="text-sm text-destructive">{errors.photo.message}</p>}
           </div>
         </div>

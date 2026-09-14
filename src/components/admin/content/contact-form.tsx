@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldPath } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,12 @@ export function ContactForm({ contact }: { contact: ContactConfig }) {
   const [isPending, startTransition] = useTransition();
   const [formError, setFormError] = useState<string | null>(null);
 
-  const { register, handleSubmit } = useForm<ContactFormValues>({
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<ContactFormValues>({
     defaultValues: contact,
   });
 
@@ -22,6 +27,13 @@ export function ContactForm({ contact }: { contact: ContactConfig }) {
     setFormError(null);
     const parsed = contactFormSchema.safeParse(values);
     if (!parsed.success) {
+      for (const issue of parsed.error.issues) {
+        if (issue.path.length) {
+          setError(issue.path.join(".") as FieldPath<ContactFormValues>, {
+            message: issue.message,
+          });
+        }
+      }
       setFormError(parsed.error.issues[0]?.message ?? "Invalid input");
       return;
     }
@@ -51,18 +63,24 @@ export function ContactForm({ contact }: { contact: ContactConfig }) {
           <div className="space-y-1.5">
             <Label htmlFor="phone">Phone</Label>
             <Input id="phone" {...register("phone")} />
+            {errors.phone && <p className="text-sm text-destructive">{errors.phone.message}</p>}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" {...register("email")} />
+            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
           <div className="space-y-1.5 sm:col-span-2">
             <Label htmlFor="address">Address</Label>
             <Input id="address" {...register("address")} />
+            {errors.address && <p className="text-sm text-destructive">{errors.address.message}</p>}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="whatsappNumber">WhatsApp Number (E.164, no +)</Label>
             <Input id="whatsappNumber" {...register("whatsappNumber")} placeholder="923001234567" />
+            {errors.whatsappNumber && (
+              <p className="text-sm text-destructive">{errors.whatsappNumber.message}</p>
+            )}
           </div>
         </div>
       </section>

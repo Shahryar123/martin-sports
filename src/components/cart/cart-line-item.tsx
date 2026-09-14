@@ -59,6 +59,7 @@ export function CartLineItemRow({ item }: { item: CartLineItem }) {
           <QuantityStepper
             quantity={item.quantity}
             onChange={(quantity) => updateQuantity(item.productId, quantity, item.variantId)}
+            max={item.maxQuantity ?? 99}
             size="sm"
           />
           <div className="text-right">

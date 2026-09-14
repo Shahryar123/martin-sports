@@ -41,6 +41,7 @@ export function ProductBuyBox({ product }: { product: Product }) {
     variantId: selectedSize?.id,
     variantLabel: selectedSize?.label,
     unitPrice: effectivePrice,
+    maxQuantity,
     image: product.images[0] ?? "",
   };
 

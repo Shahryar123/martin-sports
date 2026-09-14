@@ -50,7 +50,15 @@ export function TestimonialFormDialog({
   const [formError, setFormError] = useState<string | null>(null);
   const mode = testimonial ? "edit" : "create";
 
-  const { register, handleSubmit, setValue, watch, reset } = useForm<TestimonialFormValues>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    setError,
+    formState: { errors },
+  } = useForm<TestimonialFormValues>({
     defaultValues: testimonial ?? EMPTY,
   });
 
@@ -65,6 +73,11 @@ export function TestimonialFormDialog({
   function onSubmit(values: TestimonialFormValues) {
     const parsed = testimonialFormSchema.safeParse(values);
     if (!parsed.success) {
+      for (const issue of parsed.error.issues) {
+        if (issue.path[0]) {
+          setError(issue.path[0] as keyof TestimonialFormValues, { message: issue.message });
+        }
+      }
       setFormError(parsed.error.issues[0]?.message ?? "Invalid input");
       return;
     }
@@ -102,16 +115,23 @@ export function TestimonialFormDialog({
               <div className="space-y-1.5">
                 <Label htmlFor="authorName">Author Name</Label>
                 <Input id="authorName" {...register("authorName")} />
+                {errors.authorName && (
+                  <p className="text-sm text-destructive">{errors.authorName.message}</p>
+                )}
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="authorLocation">Location</Label>
                 <Input id="authorLocation" {...register("authorLocation")} />
+                {errors.authorLocation && (
+                  <p className="text-sm text-destructive">{errors.authorLocation.message}</p>
+                )}
               </div>
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="quote">Quote</Label>
               <Textarea id="quote" rows={3} {...register("quote")} />
+              {errors.quote && <p className="text-sm text-destructive">{errors.quote.message}</p>}
             </div>
 
             <div className="space-y-1.5">

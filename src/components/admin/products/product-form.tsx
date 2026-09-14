@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Plus, Trash2 } from "lucide-react";
+import { ImageOff, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -157,6 +157,40 @@ type ProductFormProps = {
   product?: Product;
   categories: Category[];
 };
+
+/** Small live preview for an admin-entered image path/URL. Since there's no
+ * file upload, admins only ever type a string — this catches a typo'd or
+ * dead URL before save by falling back to a broken-image icon instead of
+ * letting the browser's own broken-image glyph (or a layout jump) show. */
+function ImagePreview({ url }: { url: string }) {
+  // Track which URL failed to load (rather than a plain broken/ok boolean)
+  // so a change to `url` clears the broken state on its own during render —
+  // no effect needed to "reset" it.
+  const [brokenUrl, setBrokenUrl] = useState<string | null>(null);
+
+  if (!url) return null;
+
+  if (brokenUrl === url) {
+    return (
+      <div
+        className="flex size-12 shrink-0 items-center justify-center rounded-md border border-dashed border-border bg-surface-1"
+        title="Image failed to load"
+      >
+        <ImageOff className="size-4 text-muted-foreground" />
+      </div>
+    );
+  }
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={url}
+      alt=""
+      onError={() => setBrokenUrl(url)}
+      className="size-12 shrink-0 rounded-md border border-border object-cover"
+    />
+  );
+}
 
 export function ProductForm({ mode, product, categories }: ProductFormProps) {
   const router = useRouter();
@@ -459,7 +493,10 @@ export function ProductForm({ mode, product, categories }: ProductFormProps) {
         <h2 className="font-heading text-lg font-semibold text-foreground">Images</h2>
         <div className="space-y-1.5">
           <Label htmlFor="mainImage">Main Image (path or URL)</Label>
-          <Input id="mainImage" {...register("images.0.value" as const)} placeholder="/placeholders/bat.jpg" />
+          <div className="flex items-start gap-2">
+            <Input id="mainImage" {...register("images.0.value" as const)} placeholder="/placeholders/bat.jpg" />
+            <ImagePreview url={watch("images.0.value")} />
+          </div>
           {errors.images?.[0]?.value && (
             <p className="text-sm text-destructive">{errors.images[0]?.value?.message}</p>
           )}
@@ -470,8 +507,9 @@ export function ProductForm({ mode, product, categories }: ProductFormProps) {
           {imagesArray.fields.slice(1).map((field, i) => {
             const index = i + 1;
             return (
-              <div key={field.id} className="flex gap-2">
+              <div key={field.id} className="flex items-start gap-2">
                 <Input {...register(`images.${index}.value` as const)} placeholder="https://…" />
+                <ImagePreview url={watch(`images.${index}.value`)} />
                 <Button
                   type="button"
                   variant="ghost"

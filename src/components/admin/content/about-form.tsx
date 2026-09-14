@@ -28,7 +28,13 @@ export function AboutForm({ about, owner }: { about: AboutContent; owner: OwnerP
   const [isPending, startTransition] = useTransition();
   const [formError, setFormError] = useState<string | null>(null);
 
-  const { register, control, handleSubmit } = useForm<FormShape>({
+  const {
+    register,
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<FormShape>({
     defaultValues: {
       intro: about.intro,
       ownerName: owner.name,
@@ -54,6 +60,23 @@ export function AboutForm({ about, owner }: { about: AboutContent; owner: OwnerP
     });
 
     if (!aboutParsed.success || !ownerParsed.success) {
+      if (!aboutParsed.success) {
+        for (const issue of aboutParsed.error.issues) {
+          if (issue.path[0] === "intro") setError("intro", { message: issue.message });
+        }
+      }
+      if (!ownerParsed.success) {
+        const OWNER_FIELD_MAP: Record<string, keyof FormShape> = {
+          name: "ownerName",
+          role: "ownerRole",
+          affiliation: "ownerAffiliation",
+          photo: "ownerPhoto",
+        };
+        for (const issue of ownerParsed.error.issues) {
+          const field = OWNER_FIELD_MAP[String(issue.path[0])];
+          if (field) setError(field, { message: issue.message });
+        }
+      }
       setFormError(
         (aboutParsed.success ? null : aboutParsed.error.issues[0]?.message) ??
           (ownerParsed.success ? null : ownerParsed.error.issues[0]?.message) ??
@@ -87,6 +110,7 @@ export function AboutForm({ about, owner }: { about: AboutContent; owner: OwnerP
         <div className="space-y-1.5">
           <Label htmlFor="intro">About Page Intro</Label>
           <Textarea id="intro" rows={4} {...register("intro")} />
+          {errors.intro && <p className="text-sm text-destructive">{errors.intro.message}</p>}
         </div>
       </section>
 
@@ -96,18 +120,30 @@ export function AboutForm({ about, owner }: { about: AboutContent; owner: OwnerP
           <div className="space-y-1.5">
             <Label htmlFor="ownerName">Name</Label>
             <Input id="ownerName" {...register("ownerName")} />
+            {errors.ownerName && (
+              <p className="text-sm text-destructive">{errors.ownerName.message}</p>
+            )}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="ownerRole">Role</Label>
             <Input id="ownerRole" {...register("ownerRole")} />
+            {errors.ownerRole && (
+              <p className="text-sm text-destructive">{errors.ownerRole.message}</p>
+            )}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="ownerAffiliation">Affiliation</Label>
             <Input id="ownerAffiliation" {...register("ownerAffiliation")} />
+            {errors.ownerAffiliation && (
+              <p className="text-sm text-destructive">{errors.ownerAffiliation.message}</p>
+            )}
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="ownerPhoto">Photo (path or URL)</Label>
             <Input id="ownerPhoto" {...register("ownerPhoto")} />
+            {errors.ownerPhoto && (
+              <p className="text-sm text-destructive">{errors.ownerPhoto.message}</p>
+            )}
           </div>
         </div>
 
