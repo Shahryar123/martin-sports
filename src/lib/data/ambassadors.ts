@@ -39,9 +39,9 @@ export const AMBASSADORS: Ambassador[] = [
   {
     id: "amb-03",
     slug: "ambassador-three",
-    name: "Ambassador Three",
+    name: "Khurram Manzoor",
     role: "Brand Ambassador",
-    photo: "",
+    photo: "/ambassador/khurram-manzoor-ambassador-3.jpg",
     bio: "Profile details to be provided by Martin Sports.",
     achievements: [],
     socialLinks: [],
