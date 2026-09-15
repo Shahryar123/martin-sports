@@ -8,7 +8,7 @@ import type { Testimonial } from "@/types";
 
 export function TestimonialsSection({ testimonials }: { testimonials: Testimonial[] }) {
   return (
-    <Section>
+    <Section className="relative z-10 -mt-[90vh] flex min-h-[90vh] flex-col justify-center rounded-t-3xl bg-background">
       <Reveal>
         <SectionHeader
           eyebrow="Customer Feedback"
