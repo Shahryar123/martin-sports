@@ -23,8 +23,8 @@ export default function OpengraphImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#1f2229",
-          color: "#f5f5f2",
+          backgroundColor: "#f7f3e8",
+          color: "#1f3327",
           fontFamily: "sans-serif",
         }}
       >
@@ -33,7 +33,7 @@ export default function OpengraphImage() {
             fontSize: 30,
             letterSpacing: 6,
             textTransform: "uppercase",
-            color: "#d4af5a",
+            color: "#c19a4b",
             marginBottom: 20,
           }}
         >
@@ -42,7 +42,7 @@ export default function OpengraphImage() {
         <div style={{ fontSize: 64, fontWeight: 700, textAlign: "center", padding: "0 80px" }}>
           {SITE_CONFIG.tagline}
         </div>
-        <div style={{ fontSize: 28, marginTop: 28, color: "#c7c9d1" }}>
+        <div style={{ fontSize: 28, marginTop: 28, color: "#4d6357" }}>
           Nationwide Delivery · Cash on Delivery
         </div>
       </div>

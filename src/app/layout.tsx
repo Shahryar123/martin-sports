@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Oswald } from "next/font/google";
+import { Geist, Space_Grotesk } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { MotionProvider } from "@/components/shared/motion-provider";
 import { SITE_CONFIG } from "@/lib/constants/site";
@@ -11,7 +11,7 @@ const geistSans = Geist({
   display: "swap",
 });
 
-const oswald = Oswald({
+const spaceGrotesk = Space_Grotesk({
   variable: "--font-heading",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`dark ${geistSans.variable} ${oswald.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <a

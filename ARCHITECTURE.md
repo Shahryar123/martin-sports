@@ -383,17 +383,29 @@ an inquiry-submission form into checkout later is additive — call
 
 ## Design tokens (theme foundation)
 
-`src/app/globals.css` defines a **dark-only** design system (no light
-theme — `color-scheme: dark`, `<html class="dark">`, no theme toggle):
+`src/app/globals.css` defines a **light-only** design system (no dark
+theme — `color-scheme: light`, no theme toggle) built around a "clean 3D
+product on a studio backdrop" look: deep forest green + cream white +
+warm gold.
 
-- Layered surfaces: `--surface-0` (page) → `--surface-1` (cards) →
-  `--surface-2` (hover/elevated) → `--surface-3` (popovers/modals),
-  exposed as Tailwind utilities (`bg-surface-1`, etc.) via `@theme inline`.
-- **One accent color**: a muted premium gold (`--primary`), used for CTAs,
-  links, focus rings and the brand mark — deliberately distinct from
+- Layered surfaces: `--surface-0` (cream page background) → `--surface-1`
+  (cards/popovers, lighter than the page so they visually lift off it) →
+  `--surface-2` (a deeper, more saturated cream for hover/elevated
+  states) → `--surface-3` (near-white, for popovers/modals sitting above
+  cards), exposed as Tailwind utilities (`bg-surface-1`, etc.) via
+  `@theme inline`.
+- **One accent color**: warm gold (`--primary`/`--brand-accent`), used for
+  CTAs, links, focus rings and the brand mark — deliberately distinct from
   `--destructive` (true red) so a delete button never reads as a brand
-  action.
-- Headings use **Oswald** (condensed, athletic) via `--font-heading`; body
-  text uses **Geist Sans**. Border radius is a modest `0.5rem` — sharper
-  and more structured than the shadcn default, avoiding an overly
+  action. Body/heading text and `--success` all sit on the same deep
+  forest-green hue instead of neutral grey, so copy and status colors read
+  as part of the brand rather than generic UI grey.
+- **Contact-shadow tokens** (`--shadow-product` / `-hover`, exposed as the
+  `.shadow-product`/`.shadow-product-hover` utilities) simulate soft
+  studio lighting with a crisp shadow where a card meets the page — used
+  on `Card` and `ProductCard` instead of a flat border for the "3D
+  product" feel the brief calls for.
+- Headings use **Space Grotesk** (geometric sans) via `--font-heading`;
+  body text uses **Geist Sans**. Border radius is a modest `0.5rem` —
+  sharper and more structured than the shadcn default, avoiding an overly
   "rounded SaaS" look per the brief.

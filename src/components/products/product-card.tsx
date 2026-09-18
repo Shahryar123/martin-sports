@@ -34,7 +34,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   const stock = STOCK_BADGE[product.stockStatus];
 
   return (
-    <div className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-brand/40">
+    <div className="group flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card shadow-product transition-all hover:border-brand/40 hover:shadow-product-hover">
       <Link
         href={href}
         className="relative block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"

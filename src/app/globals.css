@@ -59,36 +59,40 @@
 }
 
 /*
- * Martin Sports design system — dark, premium, athletic. There is
- * intentionally no light theme: the brand direction calls for a single,
- * always-dark experience. Surfaces step up in lightness from the page
- * background (surface-0) through cards (surface-1) to popovers/modals
- * (surface-3) so stacked UI reads as layered rather than flat.
+ * Martin Sports design system — clean 3D product look: deep forest green +
+ * cream white + warm gold, lit like a studio product shot. There is
+ * intentionally no dark theme: the brand direction calls for a single,
+ * always-light, cream-based experience. Cards/popovers sit *lighter* than
+ * the cream page background (surface-0 → surface-1 → surface-3) so they
+ * "lift" off the page under the shadow tokens below, the way a product
+ * lifts off a studio backdrop. --surface-2 stays deliberately darker/more
+ * saturated cream — it's the hover/elevated tier, not another lift step.
  *
  * --brand-accent is THE single accent color for the whole brand — change
  * it here and every button, link, focus ring and highlight follows. It is
  * deliberately separate from shadcn's own --primary/--accent plumbing (which
  * --primary simply points at) so this file has one unambiguous place to
- * repaint the brand, and from --destructive/--success/--warning so status
- * colors never get confused with the brand color.
+ * repaint the brand, and from --destructive/--warning so status colors
+ * never get confused with the brand color. --success deliberately reuses
+ * the forest-green hue since it's the brand's own "good" color.
  *
- * Text has three tiers: --foreground (primary), --foreground-secondary
- * (secondary — subheadings, supporting copy), --muted-foreground (muted —
- * captions, metadata, disabled/tertiary text).
+ * Text has three tiers, all on the forest-green hue rather than neutral
+ * grey so body copy still reads as part of the brand: --foreground
+ * (primary), --foreground-secondary (secondary — subheadings, supporting
+ * copy), --muted-foreground (muted — captions, metadata, disabled text).
  */
-:root,
-.dark {
-  --surface-0: oklch(0.16 0.004 260);
-  --surface-1: oklch(0.205 0.005 260);
-  --surface-2: oklch(0.25 0.006 260);
-  --surface-3: oklch(0.225 0.006 260);
+:root {
+  --surface-0: oklch(0.965 0.015 88);
+  --surface-1: oklch(0.99 0.008 88);
+  --surface-2: oklch(0.93 0.024 82);
+  --surface-3: oklch(0.998 0.003 90);
 
-  --brand-accent: oklch(0.8 0.135 82);
-  --brand-accent-foreground: oklch(0.18 0.02 82);
+  --brand-accent: oklch(0.74 0.13 75);
+  --brand-accent-foreground: oklch(0.24 0.045 152);
 
   --background: var(--surface-0);
-  --foreground: oklch(0.96 0.002 260);
-  --foreground-secondary: oklch(0.8 0.006 260);
+  --foreground: oklch(0.26 0.05 152);
+  --foreground-secondary: oklch(0.4 0.045 152);
 
   --card: var(--surface-1);
   --card-foreground: var(--foreground);
@@ -102,31 +106,40 @@
   --secondary-foreground: var(--foreground);
 
   --muted: var(--surface-1);
-  --muted-foreground: oklch(0.66 0.012 260);
+  --muted-foreground: oklch(0.52 0.03 145);
 
   --accent: var(--surface-2);
   --accent-foreground: var(--foreground);
 
-  --success: oklch(0.72 0.15 152);
-  --success-foreground: oklch(0.17 0.03 152);
+  --success: oklch(0.48 0.11 152);
+  --success-foreground: oklch(0.98 0.012 152);
 
-  --warning: oklch(0.8 0.15 80);
-  --warning-foreground: oklch(0.18 0.03 80);
+  --warning: oklch(0.72 0.15 60);
+  --warning-foreground: oklch(0.2 0.04 60);
 
-  --destructive: oklch(0.62 0.21 25);
-  --destructive-foreground: oklch(0.97 0.01 25);
+  --destructive: oklch(0.55 0.21 25);
+  --destructive-foreground: oklch(0.98 0.01 25);
 
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.8 0.135 82 / 55%);
+  --border: oklch(0.32 0.05 152 / 12%);
+  --input: oklch(0.32 0.05 152 / 20%);
+  --ring: oklch(0.74 0.13 75 / 50%);
 
   --chart-1: var(--brand-accent);
-  --chart-2: oklch(0.65 0.01 260);
-  --chart-3: oklch(0.5 0.01 260);
-  --chart-4: oklch(0.4 0.01 260);
-  --chart-5: oklch(0.3 0.01 260);
+  --chart-2: oklch(0.55 0.09 152);
+  --chart-3: oklch(0.4 0.075 152);
+  --chart-4: oklch(0.68 0.1 82);
+  --chart-5: oklch(0.28 0.05 152);
 
   --radius: 0.5rem;
+
+  /* Contact-shadow stack for the "clean 3D product" look: a soft, wide
+   * ambient shadow (diffuse studio light) plus a tighter, crisper shadow
+   * close to the surface (the contact shadow where the product meets its
+   * backdrop). Tinted with the forest-green hue instead of neutral black
+   * so shadows read as part of the palette rather than generic UI murk. */
+  --shadow-color: 152 12% 20%;
+  --shadow-product: 0 1px 2px -1px hsl(var(--shadow-color) / 0.14), 0 12px 24px -8px hsl(var(--shadow-color) / 0.16);
+  --shadow-product-hover: 0 2px 4px -1px hsl(var(--shadow-color) / 0.18), 0 20px 36px -12px hsl(var(--shadow-color) / 0.22);
 
   --sidebar: var(--surface-1);
   --sidebar-foreground: var(--foreground);
@@ -147,7 +160,7 @@
   }
   html {
     @apply font-sans;
-    color-scheme: dark;
+    color-scheme: light;
   }
 }
 
@@ -171,5 +184,15 @@
   }
   .scrollbar-hidden::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Studio-lit product elevation — see --shadow-product above. Use on
+     product cards/tiles instead of a plain border for the "clean 3D
+     product on a lit backdrop" look; -hover is the lifted state. */
+  .shadow-product {
+    box-shadow: var(--shadow-product);
+  }
+  .shadow-product-hover {
+    box-shadow: var(--shadow-product-hover);
   }
 }
