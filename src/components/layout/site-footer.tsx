@@ -14,7 +14,7 @@ const SOCIAL_LINKS = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-surface-0">
+    <footer className="theme-forest border-t border-border bg-background text-foreground">
       <Container className="py-12">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div className="col-span-2 md:col-span-1">

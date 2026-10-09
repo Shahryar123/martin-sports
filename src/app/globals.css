@@ -151,6 +151,42 @@
   --sidebar-ring: var(--ring);
 }
 
+/*
+ * Forest-green chrome — a scoped re-theme for the site header/footer so
+ * they read as a solid "premium" brand band rather than another cream
+ * surface. Overriding the base tokens locally (same mechanism the old
+ * `.dark` override used) means every semantic utility already in use
+ * underneath (bg-background, text-foreground/-secondary, border-border,
+ * hover:bg-muted/surface-2) just flips to the dark-green/cream pairing
+ * automatically — no component needs its own one-off color classes.
+ * --brand-accent (gold) and --popover (cream) are deliberately left
+ * untouched: gold-on-forest is the brand's own classic pairing, and any
+ * popout surface rendered inside this scope (e.g. the Categories dropdown
+ * panel) should stay a light card, not inherit the dark chrome.
+ *
+ * Note: --muted/--accent/--secondary are redeclared directly here rather
+ * than relying on their global `var(--surface-1)`-style indirection —
+ * that indirection is resolved once where it's *declared* (:root), so a
+ * descendant scope overriding only --surface-1 wouldn't change what
+ * --muted already resolved to. Redeclaring the consumed token itself is
+ * what actually flips hover:bg-muted, etc.
+ */
+.theme-forest {
+  --background: oklch(0.27 0.045 152);
+  --foreground: oklch(0.97 0.014 85);
+  --foreground-secondary: oklch(0.84 0.03 95);
+  --muted-foreground: oklch(0.72 0.03 100);
+
+  --surface-1: oklch(0.32 0.05 152);
+  --surface-2: oklch(0.36 0.055 150);
+  --muted: var(--surface-1);
+  --accent: var(--surface-2);
+  --secondary: var(--surface-2);
+
+  --border: oklch(1 0 0 / 14%);
+  --ring: oklch(0.8 0.14 78 / 70%);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
