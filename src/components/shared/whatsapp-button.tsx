@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MessageCircle } from "lucide-react";
+import { WhatsappIcon } from "@/components/icons/whatsapp-icon";
 import { Button } from "@/components/ui/button";
 import { buildWhatsAppOrderLink } from "@/lib/whatsapp";
 import { SITE_CONFIG } from "@/lib/constants/site";
@@ -63,7 +63,7 @@ export function WhatsAppButton({
           aria-label="Order on WhatsApp"
           onClick={(e) => e.stopPropagation()}
         >
-          <MessageCircle className="size-4" />
+          <WhatsappIcon className="size-4" />
         </a>
       </Button>
     );
@@ -86,7 +86,7 @@ export function WhatsAppButton({
           className,
         )}
       >
-        <MessageCircle className="size-6" strokeWidth={2} />
+        <WhatsappIcon className="size-6" strokeWidth={2} />
       </motion.a>
     );
   }
@@ -94,7 +94,7 @@ export function WhatsAppButton({
   return (
     <Button asChild variant={variant} size={size} className={className}>
       <a href={href} target="_blank" rel="noopener noreferrer">
-        <MessageCircle className="size-4" />
+        <WhatsappIcon className="size-4" />
         {label}
       </a>
     </Button>
