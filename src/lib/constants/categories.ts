@@ -76,7 +76,7 @@ export const HOMEPAGE_CATEGORY_GROUPS: ReadonlyArray<{
   },
   { label: "Shoes", icon: Footprints, slugs: ["shoes"], image: "/categories/Shoes.jpg" },
   { label: "Kit Bags", icon: Briefcase, slugs: ["kit-bags"], image: "/categories/Bag.jpg" },
-  { label: "Accessories", icon: Wrench, slugs: ["accessories", "bat-grips"], image: "/categories/Wicket.jpg" },
+  // Accessories (Wicket.jpg) temporarily removed from the homepage grid.
 ];
 
 export function homepageCategoryHref(group: (typeof HOMEPAGE_CATEGORY_GROUPS)[number]): string {
