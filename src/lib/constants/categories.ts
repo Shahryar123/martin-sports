@@ -59,20 +59,24 @@ export const HOMEPAGE_CATEGORY_GROUPS: ReadonlyArray<{
   label: string;
   icon: LucideIcon;
   slugs: CategorySlug[];
+  /** Studio photo for the homepage tile (`public/categories`). Optional —
+   * groups without one yet fall back to the icon tile. */
+  image?: string;
 }> = [
-  { label: "Cricket Bats", icon: Shield, slugs: ["bats"] },
-  { label: "Cricket Balls", icon: CircleDot, slugs: ["balls"] },
-  { label: "Gloves", icon: Hand, slugs: ["batting-gloves", "keeping-gloves"] },
-  { label: "Helmets", icon: HardHat, slugs: ["helmets"] },
-  { label: "Pads", icon: ShieldHalf, slugs: ["pads"] },
+  { label: "Cricket Bats", icon: Shield, slugs: ["bats"], image: "/categories/Bat.jpg" },
+  { label: "Cricket Balls", icon: CircleDot, slugs: ["balls"], image: "/categories/Ball.jpg" },
+  { label: "Gloves", icon: Hand, slugs: ["batting-gloves", "keeping-gloves"], image: "/categories/Gloves.jpg" },
+  { label: "Helmets", icon: HardHat, slugs: ["helmets"], image: "/categories/Helmet.jpg" },
+  { label: "Pads", icon: ShieldHalf, slugs: ["pads"], image: "/categories/Padds.jpg" },
   {
     label: "Protection",
     icon: ShieldHalf,
     slugs: ["thigh-guards", "arm-guards", "chest-guards", "elbow-guards"],
+    image: "/categories/Guards.jpg",
   },
-  { label: "Shoes", icon: Footprints, slugs: ["shoes"] },
-  { label: "Kit Bags", icon: Briefcase, slugs: ["kit-bags"] },
-  { label: "Accessories", icon: Wrench, slugs: ["accessories", "bat-grips"] },
+  { label: "Shoes", icon: Footprints, slugs: ["shoes"], image: "/categories/Shoes.jpg" },
+  { label: "Kit Bags", icon: Briefcase, slugs: ["kit-bags"], image: "/categories/Bag.jpg" },
+  { label: "Accessories", icon: Wrench, slugs: ["accessories", "bat-grips"], image: "/categories/Wicket.jpg" },
 ];
 
 export function homepageCategoryHref(group: (typeof HOMEPAGE_CATEGORY_GROUPS)[number]): string {

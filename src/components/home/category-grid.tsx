@@ -33,21 +33,43 @@ export function CategoryGrid() {
             const href = homepageCategoryHref(group);
             return (
               <Reveal key={group.label} delay={i * 0.04}>
-                <Link
-                  href={href}
-                  className="group relative flex flex-col items-center justify-center gap-3 overflow-hidden rounded-lg border border-border bg-card px-4 py-8 text-center transition-colors hover:border-brand/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <Icon
-                    className="pointer-events-none absolute -right-3 -bottom-3 size-20 text-foreground/[0.03] transition-transform duration-300 group-hover:scale-110"
-                    strokeWidth={1}
-                  />
-                  <div className="flex size-12 items-center justify-center rounded-full border border-border bg-surface-1 transition-colors group-hover:border-brand/40">
-                    <Icon className="size-5 text-brand" strokeWidth={1.5} />
-                  </div>
-                  <span className="relative text-sm font-medium text-foreground">
-                    {group.label}
-                  </span>
-                </Link>
+                {group.image ? (
+                  <Link
+                    href={href}
+                    className="group block overflow-hidden rounded-lg border border-border bg-card shadow-product transition-all hover:border-brand/40 hover:shadow-product-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <div className="relative aspect-square overflow-hidden">
+                      <Image
+                        src={group.image}
+                        alt=""
+                        fill
+                        sizes="(min-width: 1024px) 15vw, 33vw"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="px-3 py-2.5 text-center">
+                      <span className="text-sm font-medium text-foreground">
+                        {group.label}
+                      </span>
+                    </div>
+                  </Link>
+                ) : (
+                  <Link
+                    href={href}
+                    className="group relative flex flex-col items-center justify-center gap-3 overflow-hidden rounded-lg border border-border bg-card px-4 py-8 text-center transition-colors hover:border-brand/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <Icon
+                      className="pointer-events-none absolute -right-3 -bottom-3 size-20 text-foreground/[0.03] transition-transform duration-300 group-hover:scale-110"
+                      strokeWidth={1}
+                    />
+                    <div className="flex size-12 items-center justify-center rounded-full border border-border bg-surface-1 transition-colors group-hover:border-brand/40">
+                      <Icon className="size-5 text-brand" strokeWidth={1.5} />
+                    </div>
+                    <span className="relative text-sm font-medium text-foreground">
+                      {group.label}
+                    </span>
+                  </Link>
+                )}
               </Reveal>
             );
           })}
