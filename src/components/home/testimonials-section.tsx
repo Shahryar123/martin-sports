@@ -2,13 +2,12 @@ import { Star } from "lucide-react";
 import { Section } from "@/components/shared/section";
 import { SectionHeader } from "@/components/shared/section-header";
 import { Reveal } from "@/components/shared/reveal";
-import { Caption } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import type { Testimonial } from "@/types";
 
 export function TestimonialsSection({ testimonials }: { testimonials: Testimonial[] }) {
   return (
-    <Section className="relative z-10 -mt-[90vh] flex min-h-[90vh] flex-col justify-center rounded-t-3xl bg-background">
+    <Section>
       <Reveal>
         <SectionHeader
           eyebrow="Customer Feedback"
@@ -47,10 +46,6 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
           </Reveal>
         ))}
       </div>
-
-      <Caption className="mt-6 text-center">
-        Placeholder testimonials shown for layout purposes only.
-      </Caption>
     </Section>
   );
 }
