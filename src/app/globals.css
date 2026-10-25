@@ -182,6 +182,9 @@
   --muted: var(--surface-1);
   --accent: var(--surface-2);
   --secondary: var(--surface-2);
+  --accent-foreground: var(--foreground);
+  --secondary-foreground: var(--foreground);
+  --card-foreground: var(--foreground);
 
   --border: oklch(1 0 0 / 14%);
   --ring: oklch(0.8 0.14 78 / 70%);

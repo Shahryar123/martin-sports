@@ -8,6 +8,7 @@ import { MotionPress } from "@/components/shared/motion-press";
 import { WhatsAppButton } from "@/components/shared/whatsapp-button";
 import { HeroHeading, Body } from "@/components/ui/typography";
 import { HeroGraphic } from "@/components/home/hero-graphic";
+import { cn } from "@/lib/utils";
 import type { HomepageContent } from "@/types";
 
 export function HeroSection({ homepage }: { homepage: HomepageContent }) {
@@ -16,31 +17,31 @@ export function HeroSection({ homepage }: { homepage: HomepageContent }) {
   return (
     <section className="relative overflow-hidden">
       {hasImage ? (
-        <>
-          <Image
-            src={homepage.heroImage}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-          {/* Light scrim, only strong enough near the text column to keep it
-              readable — deliberately not covering the photo. */}
-          <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-background/25 to-transparent" />
-        </>
+        <Image
+          src={homepage.heroImage}
+          alt="Martin Sports premium cricket gear"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-left"
+        />
       ) : (
         <div className="absolute inset-0 bg-gradient-to-b from-surface-1/60 via-background to-background" />
       )}
 
       <Container
-        className={
+        className={cn(
+          "relative pb-20 pt-10 lg:pb-28 lg:pt-14",
           hasImage
-            ? "relative min-h-[420px] pb-20 pt-10 sm:min-h-[480px] lg:min-h-[600px] lg:pb-28 lg:pt-14"
-            : "relative grid grid-cols-1 items-center gap-12 pb-20 pt-10 lg:grid-cols-2 lg:gap-8 lg:pb-28 lg:pt-14"
-        }
+            ? "min-h-[420px] sm:min-h-[480px] lg:min-h-[600px]"
+            : "grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8",
+        )}
       >
-        <div className={hasImage ? "flex h-full max-w-xl flex-col justify-center" : undefined}>
+        {/* The banner photo's own background is already this brand's deep
+            forest green, so the text column borrows the header/footer's
+            dark-chrome token override to read as cream-on-green instead of
+            the page's usual dark-green-on-cream. */}
+        <div className={cn(hasImage && "theme-forest flex h-full max-w-xl flex-col justify-center text-foreground")}>
           <Badge variant="secondary" className="mb-6">
             Nationwide Delivery · Cash on Delivery
           </Badge>
