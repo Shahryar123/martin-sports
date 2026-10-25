@@ -24,10 +24,10 @@ export function SiteHeader() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
       className={cn(
-        "theme-forest sticky top-0 z-40 border-b bg-background text-foreground transition-colors duration-300",
+        "theme-forest sticky top-0 z-40 border-b text-foreground transition-all duration-300",
         scrolled
-          ? "border-border shadow-sm shadow-black/20 backdrop-blur supports-[backdrop-filter]:bg-background/90"
-          : "border-transparent",
+          ? "border-border bg-background/70 shadow-sm shadow-black/20 backdrop-blur-md backdrop-saturate-150 supports-[backdrop-filter]:bg-background/55"
+          : "border-transparent bg-[#112519]",
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
