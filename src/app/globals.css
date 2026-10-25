@@ -190,6 +190,23 @@
   --ring: oklch(0.8 0.14 78 / 70%);
 }
 
+/* Restores the normal light/cream surface tokens for a popover-style
+ * surface (bg-popover) that renders *inside* a .theme-forest ancestor,
+ * e.g. the header's Categories dropdown panel — without this, its own
+ * hover states (hover:bg-muted, etc.) would inherit the header's dark
+ * chrome tokens even though the panel itself is a light popover card. */
+.theme-light-surface {
+  --foreground: oklch(0.26 0.05 152);
+  --foreground-secondary: oklch(0.4 0.045 152);
+  --muted: oklch(0.99 0.008 88);
+  --muted-foreground: oklch(0.52 0.03 145);
+  --accent: oklch(0.93 0.024 82);
+  --accent-foreground: var(--foreground);
+  --secondary: oklch(0.93 0.024 82);
+  --secondary-foreground: var(--foreground);
+  --border: oklch(0.32 0.05 152 / 12%);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

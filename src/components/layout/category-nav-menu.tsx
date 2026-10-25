@@ -22,7 +22,10 @@ export function CategoryNavMenu() {
             <ul className="grid w-[520px] grid-cols-2 gap-1 p-2">
               {CATEGORIES.map(({ slug, name, icon: Icon }) => (
                 <li key={slug}>
-                  <NavigationMenuLink asChild>
+                  <NavigationMenuLink
+                    asChild
+                    className="hover:bg-[#112519] hover:text-white focus:bg-[#112519] focus:text-white"
+                  >
                     <Link href={`/shop?category=${slug}`}>
                       <Icon className="size-4 text-brand" strokeWidth={1.5} />
                       {name}
