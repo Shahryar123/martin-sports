@@ -34,8 +34,8 @@ export default async function HomePage() {
       <CategoryGrid />
       <FeaturedProductsSection products={featured} priorityCount={2} />
       <WhatsAppCtaSection />
-      <AmbassadorsSection ambassadors={ambassadors} />
       <FounderSection owner={owner} />
+      <AmbassadorsSection ambassadors={ambassadors} />
       <WhySection />
       <TestimonialsSection testimonials={testimonials} />
     </div>
