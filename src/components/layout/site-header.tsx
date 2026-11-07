@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { PRIMARY_NAV } from "@/lib/constants/nav";
@@ -33,9 +34,20 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="font-heading shrink-0 text-xl font-semibold tracking-tight text-foreground transition-colors hover:text-brand"
+          className="group flex shrink-0 items-center gap-2.5"
+          aria-label={`${SITE_CONFIG.name} home`}
         >
-          {SITE_CONFIG.name}
+          <Image
+            src="/logo-shield.png"
+            alt=""
+            width={353}
+            height={430}
+            priority
+            className="h-11 w-auto transition-transform duration-300 group-hover:scale-105"
+          />
+          <span className="font-display text-2xl leading-none font-extrabold italic tracking-wide text-foreground uppercase transition-colors group-hover:text-brand">
+            {SITE_CONFIG.name}
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
