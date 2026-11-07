@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, UserRound, Trophy, GraduationCap, MapPin } from "lucide-react";
+import { ArrowRight, Trophy, GraduationCap, MapPin } from "lucide-react";
 import { Section } from "@/components/shared/section";
 import { Reveal } from "@/components/shared/reveal";
 import { Metadata, SectionHeading, Body } from "@/components/ui/typography";
@@ -16,8 +17,14 @@ export function FounderSection({ owner }: { owner: OwnerProfile }) {
     <Section surface="muted">
       <Reveal>
         <div className="grid grid-cols-1 gap-10 rounded-xl border border-border bg-card p-6 sm:p-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:gap-12">
-          <div className="mx-auto flex aspect-[3/4] w-full max-w-xs items-center justify-center rounded-lg border border-border bg-gradient-to-b from-surface-2 to-surface-1 lg:mx-0">
-            <UserRound className="size-24 text-muted-foreground/50" strokeWidth={1} />
+          <div className="relative mx-auto aspect-[3/4] w-full max-w-xs overflow-hidden rounded-lg border border-border bg-surface-1 lg:mx-0">
+            <Image
+              src="/coach.jpg"
+              alt={owner.name}
+              fill
+              sizes="(min-width: 1024px) 320px, 100vw"
+              className="object-cover"
+            />
           </div>
 
           <div className="flex flex-col justify-center">
