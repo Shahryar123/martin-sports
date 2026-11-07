@@ -10,7 +10,7 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
     <Section className="bg-white">
       <Reveal>
         <SectionHeader
-          title="What Customers Say"
+          title="What Our Customers Say !!"
           align="center"
           headingClassName="not-italic"
           description="Hear from our customers about their experiences with Martin Sports. We value their feedback and strive to provide the best service possible."

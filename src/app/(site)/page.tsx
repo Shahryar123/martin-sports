@@ -33,11 +33,11 @@ export default async function HomePage() {
       <DeliverySection />
       <CategoryGrid />
       <FeaturedProductsSection products={featured} priorityCount={2} />
+      <WhatsAppCtaSection />
       <AmbassadorsSection ambassadors={ambassadors} />
       <FounderSection owner={owner} />
       <WhySection />
       <TestimonialsSection testimonials={testimonials} />
-      <WhatsAppCtaSection />
     </div>
   );
 }
