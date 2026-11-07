@@ -1,17 +1,70 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, UserRound } from "lucide-react";
 import { ProductHeading, Metadata } from "@/components/ui/typography";
 import type { Ambassador } from "@/types";
 
-/** Scroll-snap carousel showing three cards at a time on sm+ (one and a
- * peek on phones); arrows scroll by one card. */
+// The list is rendered three times back to back and the view is kept on the
+// middle copy: whenever a move lands in the first or last copy, scrollLeft
+// silently jumps by one copy's width to the identical card in the middle,
+// so the carousel loops endlessly in both directions.
+const COPIES = 3;
+
+function measure(track: HTMLDivElement) {
+  const card = track.firstElementChild as HTMLElement | null;
+  if (!card) return null;
+  const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+  const step = card.offsetWidth + gap;
+  return { step, setWidth: step * (track.children.length / COPIES) };
+}
+
+/** Looping scroll-snap carousel showing three cards at a time on sm+ (one
+ * and a peek on phones); arrows scroll by one card. */
 export function AmbassadorCarousel({ ambassadors }: { ambassadors: Ambassador[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
-
   const animationRef = useRef<number | null>(null);
+  const items = Array.from({ length: COPIES }, (_, copy) =>
+    ambassadors.map((ambassador, i) => ({ ambassador, i, copy })),
+  ).flat();
+
+  function recenter() {
+    const track = trackRef.current;
+    const m = track && measure(track);
+    if (!track || !m) return;
+    let offset = 0;
+    if (track.scrollLeft < m.setWidth - m.step / 2) offset = m.setWidth;
+    else if (track.scrollLeft >= m.setWidth * 2 - m.step / 2) offset = -m.setWidth;
+    if (offset === 0) return;
+    track.style.scrollSnapType = "none";
+    track.scrollLeft += offset;
+    requestAnimationFrame(() => {
+      track.style.scrollSnapType = "";
+    });
+  }
+
+  useEffect(() => {
+    const track = trackRef.current;
+    const m = track && measure(track);
+    if (!track || !m) return;
+    track.style.scrollSnapType = "none";
+    track.scrollLeft = m.setWidth;
+    track.style.scrollSnapType = "";
+
+    // Swipes/trackpad scrolls settle via snapping; re-center once they stop.
+    let timer: ReturnType<typeof setTimeout>;
+    const onScroll = () => {
+      if (animationRef.current !== null) return;
+      clearTimeout(timer);
+      timer = setTimeout(recenter, 150);
+    };
+    track.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      clearTimeout(timer);
+      track.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   // Arrow clicks animate scrollLeft by hand with an ease-in-out curve:
   // native `behavior: "smooth"` combined with mandatory snapping makes the
@@ -19,16 +72,16 @@ export function AmbassadorCarousel({ ambassadors }: { ambassadors: Ambassador[] 
   // for the duration of the animation and restored once it lands on a card.
   function scrollByCard(direction: 1 | -1) {
     const track = trackRef.current;
-    const card = track?.firstElementChild as HTMLElement | null;
-    if (!track || !card) return;
+    const m = track && measure(track);
+    if (!track || !m) return;
 
-    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-    const step = card.offsetWidth + gap;
-    const maxScroll = track.scrollWidth - track.clientWidth;
+    if (animationRef.current !== null) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+    recenter();
     const start = track.scrollLeft;
-    const current = Math.round(start / step);
-    const target = Math.max(0, Math.min(maxScroll, (current + direction) * step));
-    if (target === start) return;
+    const target = (Math.round(start / m.step) + direction) * m.step;
 
     if (animationRef.current !== null) cancelAnimationFrame(animationRef.current);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -45,6 +98,7 @@ export function AmbassadorCarousel({ ambassadors }: { ambassadors: Ambassador[] 
       } else {
         animationRef.current = null;
         track.style.scrollSnapType = "";
+        recenter();
       }
     };
     animationRef.current = requestAnimationFrame(tick);
@@ -56,9 +110,10 @@ export function AmbassadorCarousel({ ambassadors }: { ambassadors: Ambassador[] 
         ref={trackRef}
         className="scrollbar-hidden flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain sm:gap-6"
       >
-        {ambassadors.map((ambassador, i) => (
+        {items.map(({ ambassador, i, copy }) => (
           <div
-            key={ambassador.id}
+            key={`${ambassador.id}-${copy}`}
+            aria-hidden={copy !== 1 || undefined}
             className="group relative w-[80%] shrink-0 snap-start overflow-hidden rounded-lg border border-border bg-card sm:w-[calc((100%-3rem)/3)]"
           >
             <div className="relative flex aspect-[3/4] items-center justify-center overflow-hidden bg-gradient-to-b from-surface-2 to-surface-1">
