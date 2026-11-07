@@ -61,7 +61,7 @@ export function SectionHeading({
   return (
     <Comp
       className={cn(
-        "font-heading text-2xl leading-tight font-semibold tracking-tight sm:text-3xl",
+        "font-display text-4xl leading-[0.95] font-extrabold italic uppercase sm:text-5xl lg:text-6xl",
         className,
       )}
       {...props}

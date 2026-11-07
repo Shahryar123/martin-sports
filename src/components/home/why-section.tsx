@@ -63,7 +63,6 @@ export function WhySection() {
       <div className="relative z-10">
         <Reveal>
           <SectionHeader
-            eyebrow="Why Martin Sports"
             title="Built Around the Game"
           />
         </Reveal>

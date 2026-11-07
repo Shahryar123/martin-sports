@@ -12,7 +12,6 @@ export function AmbassadorsSection({ ambassadors }: { ambassadors: Ambassador[] 
     <Section className="bg-white">
       <Reveal>
         <SectionHeader
-          eyebrow="The Roster"
           title="Brand Ambassadors"
           description="Athletes who represent Martin Sports on and off the field. Full profiles coming soon."
           action={

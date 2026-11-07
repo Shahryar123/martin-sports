@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Space_Grotesk } from "next/font/google";
+import { Barlow_Condensed, Geist, Space_Grotesk } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { MotionProvider } from "@/components/shared/motion-provider";
 import { SITE_CONFIG } from "@/lib/constants/site";
@@ -18,6 +18,14 @@ const spaceGrotesk = Space_Grotesk({
   display: "swap",
 });
 
+const barlowCondensed = Barlow_Condensed({
+  variable: "--font-display",
+  subsets: ["latin"],
+  weight: ["700", "800"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_CONFIG.url),
   title: {
@@ -31,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${spaceGrotesk.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${spaceGrotesk.variable} ${barlowCondensed.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <a

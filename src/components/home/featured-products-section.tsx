@@ -22,7 +22,6 @@ export function FeaturedProductsSection({
     <Section className="bg-white">
       <Reveal>
         <SectionHeader
-          eyebrow="The Collection"
           title="Featured Products"
           description="Browse our curated selection of cricket gear, handpicked for quality and performance."
           action={

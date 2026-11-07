@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 /**
  * Parallax banner: `bg-fixed` (background-attachment: fixed) pins the
@@ -11,21 +11,41 @@ import { Button } from "@/components/ui/button";
  */
 export function DeliverySection() {
   return (
-    <div className="relative flex h-[70vh] w-full flex-col items-end justify-end gap-4 px-6 pb-16 sm:h-[85vh] sm:px-16 sm:pb-24">
+    <section className="relative flex h-[80vh] w-full items-end bg-[#0b0b0b] sm:h-[85vh]">
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[url('/banner-main.png')] bg-cover bg-center bg-fixed"
       />
-      <p className="font-heading relative text-2xl font-bold tracking-wide text-white uppercase [text-shadow:0_2px_16px_rgba(0,0,0,0.6)] sm:text-4xl">
-        Gear Up With Martin Sports
-      </p>
-      <Button
-        size="lg"
-        asChild
-        className="relative h-14 bg-[#5e0809] px-10 text-lg font-semibold text-white hover:bg-[#5e0809]/85 sm:h-16 sm:px-14 sm:text-xl"
-      >
-        <Link href="/shop">Shop Now</Link>
-      </Button>
-    </div>
+      {/* Fades the photo into near-black behind the copy, bottom-left. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b] via-[#0b0b0b]/60 to-transparent sm:bg-gradient-to-tr sm:via-[#0b0b0b]/40"
+      />
+
+      <div className="relative mx-auto w-full max-w-7xl px-6 pb-14 sm:px-8 sm:pb-20 lg:px-8">
+        <p className="font-display text-sm font-bold tracking-[0.3em] text-brand uppercase sm:text-base">
+          New Season Kit
+        </p>
+        <h2 className="font-display mt-4 text-5xl leading-[0.95] font-extrabold italic uppercase sm:text-6xl lg:text-7xl">
+          <span className="block text-[#f3efe4]">Gear Up With</span>
+          <span className="block text-brand">Martin Sports</span>
+        </h2>
+
+        <div className="mt-8 flex flex-wrap gap-4">
+          <Link
+            href="/shop"
+            className="font-display inline-flex h-14 items-center gap-3 rounded-md bg-brand px-8 text-lg font-bold tracking-[0.15em] text-[#0b0b0b] uppercase shadow-[0_8px_30px_-6px] shadow-brand/60 transition-colors hover:bg-brand/90"
+          >
+            Shop Now <ArrowRight className="size-5" />
+          </Link>
+          <Link
+            href="/shop?category=bats"
+            className="font-display inline-flex h-14 items-center rounded-md border border-brand px-8 text-lg font-bold tracking-[0.15em] text-[#f3efe4] uppercase transition-colors hover:bg-brand/10"
+          >
+            Shop Bats
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }
