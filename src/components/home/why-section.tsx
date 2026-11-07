@@ -59,7 +59,6 @@ export function WhySection() {
         sizes="100vw"
         className="object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/55 via-background/35 to-background/55" />
 
       <div className="relative z-10">
         <Reveal>
