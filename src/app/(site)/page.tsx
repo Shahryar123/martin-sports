@@ -35,11 +35,11 @@ export default async function HomePage() {
     <div>
       <HeroSection homepage={homepage} />
       <CategoryGrid />
+      <DeliverySection />
       <FeaturedProductsSection products={featured} priorityCount={2} />
       <AmbassadorsSection ambassadors={ambassadors} />
       <FounderSection owner={owner} />
       <WhySection />
-      <DeliverySection />
       <TestimonialsSection testimonials={testimonials} />
       <WhatsAppCtaSection />
     </div>
