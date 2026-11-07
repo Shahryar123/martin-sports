@@ -19,7 +19,7 @@ export function FeaturedProductsSection({
   priorityCount = 0,
 }: FeaturedProductsSectionProps) {
   return (
-    <Section>
+    <Section className="bg-white">
       <Reveal>
         <SectionHeader
           eyebrow="The Collection"

@@ -14,7 +14,7 @@ const FACTS = [
 
 export function FounderSection({ owner }: { owner: OwnerProfile }) {
   return (
-    <Section surface="muted">
+    <Section className="bg-white">
       <Reveal>
         <div className="grid grid-cols-1 gap-10 rounded-xl border border-border bg-card p-6 sm:p-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:gap-12">
           <div className="relative mx-auto aspect-[3/4] w-full max-w-xs overflow-hidden rounded-lg border border-border bg-surface-1 lg:mx-0">

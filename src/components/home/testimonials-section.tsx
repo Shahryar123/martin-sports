@@ -7,7 +7,7 @@ import type { Testimonial } from "@/types";
 
 export function TestimonialsSection({ testimonials }: { testimonials: Testimonial[] }) {
   return (
-    <Section>
+    <Section className="bg-white">
       <Reveal>
         <SectionHeader
           eyebrow="Customer Feedback"

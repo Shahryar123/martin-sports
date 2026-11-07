@@ -7,7 +7,7 @@ import { HOMEPAGE_CATEGORY_GROUPS, homepageCategoryHref } from "@/lib/constants/
 
 export function CategoryGrid() {
   return (
-    <Section>
+    <Section className="bg-white">
       <Reveal>
         <SectionHeader
           eyebrow="Shop by Category"

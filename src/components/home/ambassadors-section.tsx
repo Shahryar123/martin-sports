@@ -9,7 +9,7 @@ import type { Ambassador } from "@/types";
 
 export function AmbassadorsSection({ ambassadors }: { ambassadors: Ambassador[] }) {
   return (
-    <Section>
+    <Section className="bg-white">
       <Reveal>
         <SectionHeader
           eyebrow="The Roster"
